@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>3D Job Hunter & Art Critique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- PWA STANDALONE META TAGS -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href='data:application/manifest+json,{"name":"3D Job Hunter","short_name":"JobHunter","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#0f172a"}'>
+
+<!-- EARLY GLOBAL ERROR CATCHER -->
+<script>
+(function() {
+  function showError(title, msg, stack) {
+    var errBox = document.getElementById('app-error-screen');
+    if (!errBox) {
+      errBox = document.createElement('div');
+      errBox.id = 'app-error-screen';
+      errBox.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#1e1010;color:#f87171;padding:20px;z-index:999999;font-family:monospace;overflow:auto;box-sizing:border-box;';
+      document.body ? document.body.appendChild(errBox) : document.documentElement.appendChild(errBox);
+    }
+    errBox.innerHTML = '<h2 style="color:#ef4444;margin-top:0;">&#9888; App Execution Error</h2>' +
+      '<strong>Type:</strong> ' + (title || 'Error') + '<br>' +
+      '<strong>Message:</strong> ' + (msg || 'Unknown Error') + '<br><br>' +
+      '<strong>Stack Trace:</strong><pre style="background:#0f0505;padding:10px;border-radius:6px;white-space:pre-wrap;color:#fca5a5;">' + (stack || 'N/A') + '</pre>' +
+      '<button onclick="location.reload()" style="padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">Reload App</button>';
+  }
+
+  window.onerror = function(msg, url, line, col, error) {
+    var stack = error && error.stack ? error.stack : ('Line ' + line + ', Col ' + col + ' in ' + (url || 'script'));
+    showError(msg, 'Uncaught Exception', stack);
+    return false;
+  };
+
+  window.addEventListener('unhandledrejection', function(e) {
+    var reason = e.reason;
+    var msg = reason ? (reason.message || reason) : 'Unhandled Promise Rejection';
+    var stack = reason && reason.stack ? reason.stack : 'No stack available';
+    showError('Unhandled Promise Rejection', msg, stack);
+  });
+})();
+</script>
+
+<style>
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card-hover: #334155;
+  --border: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-light: rgba(99, 102, 241, 0.15);
+  --success: #22c55e;
+  --danger: #ef4444;
+  --radius: 12px;
+  --shadow: 0 4px 12px -2px rgba(0,0,0,0.3);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --card-hover: #f1f5f9;
+    --border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-light: rgba(79, 70, 229, 0.1);
+    --shadow: 0 4px 12px -2px rgba(0,0,0,0.05);
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 12px 14px calc(80px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h2 { font-size: 1.05rem; font-weight: 700; margin: 0 0 6px; color: var(--text-main); }
+h3 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+
+nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: var(--card);
+  padding: 6px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+nav button {
+  flex: 1;
+  padding: 10px 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+nav button.on {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+.c {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+
+.mu { color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; }
+.ok { color: var(--success); font-weight: 600; font-size: 0.85rem; }
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--accent-light);
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.r { display: flex; gap: 8px; margin: 8px 0; }
+.r > * { flex: 1; }
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-main);
+  width: 100%;
+  margin: 6px 0 10px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+}
+textarea { height: 130px; resize: vertical; }
+
+.b {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  width: 100%;
+  margin-top: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.b.g { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.b.danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+
+.img-preview { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+.img-thumb-container { position: relative; width: 84px; height: 84px; }
+.img-thumb-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+.img-remove {
+  position: absolute; top: -6px; right: -6px;
+  background: var(--danger); color: white; border: none;
+  border-radius: 50%; width: 20px; height: 20px; font-size: 11px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+#toast {
+  position: fixed; left: 16px; right: 16px;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--text-main); color: var(--bg);
+  padding: 12px 18px; border-radius: 10px; opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateY(10px); pointer-events: none;
+  text-align: center; font-weight: 600; font-size: 0.88rem;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); z-index: 1000;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+
+.spinner {
+  width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin 0.8s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div style="padding:24px; text-align:center; color:#94a3b8; font-family:sans-serif;">
+    Initialising 3D Job Hunter...
+  </div>
+</div>
+<div id="toast"></div>
+
+<script charset="utf-8">
+// --- DIAGNOSTIC ENVIRONMENT SUITE ---
+(function runDiagnostics() {
+  var errs = [];
+  if (!window.fetch) errs.push('Fetch API is missing');
+  if (!window.Promise) errs.push('Promises are unsupported');
+  if (!window.DOMParser) errs.push('DOMParser is missing');
+  
+  try {
+    localStorage.setItem('__test__', '1');
+    localStorage.removeItem('__test__');
+  } catch(e) {
+    errs.push('LocalStorage is restricted or disabled: ' + e.message);
+  }
+
+  if (errs.length > 0) {
+    throw new Error('Environment Diagnostic Check Failed:\n- ' + errs.join('\n- '));
+  }
+})();
+
+// --- MAIN APPLICATION SCRIPT ---
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const DM = { openai: "gpt-4o-mini", claude: "claude-haiku-4-5-20251001", gemini: "gemini-3.8-flash" };
+const ST = ["New", "Saved", "Applied", "Interview", "Rejected"];
+
+const DEFAULT_GEMINI_KEY = "AQ.Ab8RN6IA1Iif984B6xeZhodlIzPTef5FM-6roi5DiQBH9LDOWQ";
+
+let S = {
+  pv: "gemini",
+  keys: { gemini: DEFAULT_GEMINI_KEY },
+  md: {},
+  q: "3d",
+  kw: "houdini, hard-surface, hard surface, cloth, maya, zbrush, substance, unreal, props, assets, uv",
+  about: "Abdelrahman Hamada, 3D Asset Artist (film/VFX assets). Hard-surface modeling, procedural modeling in Houdini, cloth creation and simulation, UVs. Tools: Maya, Houdini, ZBrush, Substance Painter, Unreal Engine, NukeX. Freelance: CG commercial, stylized game-ready assets, vegetation assets.",
+  pj: [],
+  pf: "Auto",
+  prof: "",
+  loc: "remote, worldwide, anywhere, egypt, europe, emea",
+  sort: "fit",
+  studios: "gh:epicgames\ngh:riotgames\ngh:roblox\ngh:unity3d\ngh:bungie\ngh:nianticlabs\ngh:scopely",
+  jobs: [],
+  st: {},
+  cl: {},
+  critiques: []
+};
+
+let tab = "Jobs", out = "", busy = "", flt = "All", critImages = [];
+
+// Safe LocalStorage loading
+try {
+  const item = localStorage.getItem("jh");
+  if (item) {
+    const parsed = JSON.parse(item);
+    Object.assign(S, parsed);
+  }
+} catch (e) {
+  console.warn("Storage read failed:", e);
+}
+
+// Ensure default Gemini API key is active and model override is updated
+if (!S.keys) S.keys = {};
+if (!S.keys.gemini) {
+  S.keys.gemini = DEFAULT_GEMINI_KEY;
+}
+if (!S.md) S.md = {};
+if (S.md.gemini === "gemini-2.5-flash") {
+  S.md.gemini = "gemini-3.8-flash";
+}
+
+const save = () => {
+  try {
+    localStorage.setItem("jh", JSON.stringify(S));
+  } catch (e) {
+    console.warn("Storage save failed:", e);
+  }
+};
+
+function toast(m) {
+  const t = $("toast");
+  if (!t) return;
+  t.textContent = m;
+  t.classList.add("show");
+  clearTimeout(window.tt);
+  window.tt = setTimeout(() => t.classList.remove("show"), 3200);
+}
+
+const ctx = () => S.about + (S.prof ? "\n\nPORTFOLIO & LEVEL ASSESSMENT:\n" + S.prof : "");
+
+async function llm(p, files, web) {
+  const v = S.pv;
+  const k = S.keys[v] || (v === "gemini" ? DEFAULT_GEMINI_KEY : "");
+  const m = S.md[v] || DM[v];
+  files = files || [];
+  if (!k) throw new Error("Add your API key in Profile settings.");
+
+  let r, j;
+  const ck = (n) => {
+    if (!r.ok) throw new Error((j && j.error && (j.error.message || j.error)) || (n + " error " + r.status));
+  };
+  const post = (u, h, b) => fetch(u, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, h), body: JSON.stringify(b) });
+
+  if (v === "openai") {
+    const h = { Authorization: "Bearer " + k };
+    if (web) {
+      r = await post("https://api.openai.com/v1/responses", h, { model: m, tools: [{ type: "web_search" }], input: p });
+      j = await r.json(); ck("OpenAI");
+      return j.output_text || (j.output || []).flatMap(o => o.content || []).map(c => c.text || "").join("");
+    }
+    const content = files.map(f => ({
+      type: f.t.startsWith("image/") ? "image_url" : "file",
+      [f.t.startsWith("image/") ? "image_url" : "file"]: f.t.startsWith("image/") ? { url: "data:" + f.t + ";base64," + f.d } : { filename: f.n, file_data: "data:application/pdf;base64," + f.d }
+    })).concat([{ type: "text", text: p }]);
+    r = await post("https://api.openai.com/v1/chat/completions", h, { model: m, messages: [{ role: "user", content }] });
+    j = await r.json(); ck("OpenAI");
+    return j.choices[0].message.content;
+  }
+
+  if (v === "claude") {
+    const content = files.map(f => ({
+      type: f.t.startsWith("image/") ? "image" : "document",
+      source: { type: "base64", media_type: f.t, data: f.d }
+    })).concat([{ type: "text", text: p }]);
+    const b = { model: m, max_tokens: 4000, messages: [{ role: "user", content }] };
+    if (web) b.tools = [{ type: "web_search_20250305", name: "web_search", max_uses: 8 }];
+    r = await post("https://api.anthropic.com/v1/messages", { "x-api-key": k, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" }, b);
+    j = await r.json(); ck("Claude");
+    return j.content.filter(x => x.type === "text").map(x => x.text).join("");
+  }
+
+  const parts = files.map(f => ({ inline_data: { mime_type: f.t, data: f.d } })).concat([{ text: p }]);
+  const b = { contents: [{ parts }] };
+  if (web) b.tools = [{ google_search: {} }];
+  r = await post("https://generativelanguage.googleapis.com/v1beta/models/" + m + ":generateContent", { "x-goog-api-key": k }, b);
+  j = await r.json(); ck("Gemini");
+  return j.candidates[0].content.parts.map(x => x.text || "").join("");
+}
+
+const J = async u => { const r = await fetch(u); if (!r.ok) throw new Error("Network request failed"); return r.json(); };
+const strip = h => String(h || "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+const OK = /3d|artist|modell?er|vfx|houdini|asset|prop|environment|texture|lookdev|technical art|animator|rigg|unreal|game art/i;
+
+function score(j) {
+  const x = (j.t + " " + j.d).toLowerCase();
+  const t = j.t.toLowerCase();
+  return Math.min(100, S.kw.split(",").map(k => k.trim().toLowerCase()).filter(Boolean).reduce((a, k) => a + (t.includes(k) ? 25 : x.includes(k) ? 12 : 0), 0));
+}
+
+const STU = {
+  gh: async t => (await J("https://boards-api.greenhouse.io/v1/boards/" + t + "/jobs?content=true")).jobs.map(j => ({ t: j.title, c: t, l: (j.location || {}).name, u: j.absolute_url, d: j.content, dt: j.updated_at, dr: 1, s: "Greenhouse: " + t })),
+  lever: async t => (await J("https://api.lever.co/v0/postings/" + t + "?mode=json")).map(j => ({ t: j.text, c: t, l: (j.categories || {}).location, u: j.hostedUrl, d: j.descriptionPlain, dt: j.createdAt, dr: 1, s: "Lever: " + t })),
+  ashby: async t => (await J("https://api.ashbyhq.com/posting-api/job-board/" + t)).jobs.map(j => ({ t: j.title, c: j.location, u: j.jobUrl, d: j.descriptionPlain, dt: j.publishedAt, dr: 1, s: "Ashby: " + t }))
+};
+  const AGG = [
+  ["Remotive", async () => (await J("https://remotive.com/api/remote-jobs?search=" + encodeURIComponent(S.q || "3d"))).jobs.map(j => ({ t: j.title, c: j.company_name, l: j.candidate_required_location, u: j.url, d: j.description, s: "Remotive", dt: j.publication_date }))],
+  ["RemoteOK", async () => (await J("https://remoteok.com/api")).filter(j => j.position).map(j => ({ t: j.position, c: j.company, l: j.location || "Remote", u: j.url, d: (j.description || "") + " " + (j.tags || []).join(" "), s: "RemoteOK", dt: j.date }))],
+  ["Arbeitnow", async () => (await J("https://www.arbeitnow.com/api/job-board-api")).data.map(j => ({ t: j.title, c: j.company_name, l: j.location, u: j.url, d: (j.description || "") + " " + (j.tags || []).join(" "), s: "Arbeitnow", dt: j.created_at * 1000 }))],
+  ["Jobicy", async () => (await J("https://jobicy.com/api/v2/remote-jobs?count=50&tag=" + encodeURIComponent(S.q || "3d"))).jobs.map(j => ({ t: j.jobTitle, c: j.companyName, l: j.jobGeo || j.jobGeolocation, u: j.url, d: j.jobDescription || j.jobExcerpt, s: "Jobicy", dt: j.pubDate }))],
+  ["WorkingNomads", async () => (await J("https://www.workingnomads.com/api/exposed_jobs/")).map(j => ({ t: j.title, c: j.company_name, l: j.location, u: j.url, d: (j.description || "") + " " + (j.tags || ""), s: "WorkingNomads", dt: j.pub_date }))]
+];
+
+function merge(got, base) {
+  const cnt = {}, seen = {}, nj = [];
+  got.forEach(j => {
+    j.k = ((j.c || "") + j.t).toLowerCase().replace(/\W/g, "");
+    cnt[j.k] = (cnt[j.k] || 0) + 1;
+  });
+  const mk = j => {
+    const raw = String(j.d || "");
+    const m = raw.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
+    const dd = j.dt ? new Date(j.dt) : null;
+    const o = {
+      t: j.t,
+      c: j.c || "",
+      l: j.l || "",
+      u: j.u,
+      s: j.s,
+      dr: j.dr,
+      dt: dd && !isNaN(dd) ? dd.toISOString().slice(0, 10) : "",
+      d: strip(raw).slice(0, 1500),
+      em: m ? m[0] : "",
+      n: cnt[j.k]
+    };
+    o.sc = score(o);
+    return o;
+  };
+  got.filter(j => j.u && j.t && OK.test(j.t)).map(mk).concat(base).forEach(o => {
+    if (seen[o.u]) return;
+    seen[o.u] = 1;
+    nj.push(o);
+  });
+  S.jobs = nj.sort((a, b) => b.sc - a.sc).slice(0, 300);
+}
+
+async function find() {
+  const got = [], bad = [];
+  const tasks = AGG.map(([n, f]) => [n, f]).concat(S.studios.split("\n").map(x => x.trim()).filter(x => /^(gh|lever|ashby):\S+$/.test(x)).map(x => { const [a, t] = x.split(":"); return [x, () => STU[a](t)]; }));
+  await Promise.all(tasks.map(async ([n, f]) => { try { got.push(...await f()); } catch (e) { bad.push(n); } }));
+  merge(got, S.jobs.filter(j => S.st[j.u] && S.st[j.u] !== "New"));
+  save(); toast(S.jobs.length + " jobs loaded.");
+}
+
+async function ai() {
+  const prompt = 'Use web search to find CURRENT open 3D art, VFX or game-art job postings that fit this candidate. Return ONLY a JSON array (max 15) of {"t":title,"c":company,"l":location,"u":direct application URL,"d":summary,"dt":"YYYY-MM-DD or empty"}.';
+  const t = await llm(prompt, null, true);
+  const start = t.indexOf("[");
+  const end = t.lastIndexOf("]");
+  if (start === -1 || end === -1) throw new Error("AI did not return a valid JSON array.");
+  const a = JSON.parse(t.slice(start, end + 1));
+  a.forEach(j => { j.s = "AI Search"; j.dr = 1; });
+  merge(a, S.jobs);
+}
+
+async function rank() {
+  const L = S.jobs.slice(0, 30);
+  if (!L.length) throw new Error("Find jobs first.");
+  const jobList = L.map((j, i) => i + ". " + j.t + " | " + j.c + " | " + j.l + " | " + j.d.slice(0, 300)).join("\n");
+  const prompt = "Candidate:\n" + ctx() + "\n\nScore each job 0-100 for fit. Reply ONLY with a JSON array of {\"i\":number,\"s\":number,\"w\":\"reason max 10 words\"}.\n" + jobList;
+  const t = await llm(prompt);
+  const cleanJson = t.replace(/```json|```/g, "").trim();
+  const results = JSON.parse(cleanJson);
+  results.forEach(r => {
+    const j = L[r.i];
+    if (j) { j.sc = r.s; j.w = r.w; }
+  });
+  S.jobs.sort((a, b) => b.sc - a.sc);
+}
+
+async function letter(i) {
+  const j = S.jobs[i];
+  const prompt = "Write a concise cover letter (<180 words, plain text) for this candidate applying to this role:\n\nCANDIDATE: " + ctx() + "\n\nJOB: " + j.t + " at " + j.c + "\n" + j.d;
+  const t = await llm(prompt);
+  S.cl[j.u] = t;
+  out = t;
+}
+
+async function gaps() {
+  if (!S.jobs.length) throw new Error("Find jobs first.");
+  const prompt = "Candidate: " + ctx() + "\n\nJobs:\n" + S.jobs.slice(0, 25).map(j => j.t + ": " + j.d.slice(0, 250)).join("\n") + "\n\nList the top 6 requested skills the candidate lacks, and 3 project ideas to fix those gaps.";
+  out = await llm(prompt);
+}
+
+const b64 = f => new Promise((y, n) => { const r = new FileReader(); r.onload = () => y({ d: r.result.split(",")[1], t: f.type || "application/pdf", n: f.name }); r.onerror = n; r.readAsDataURL(f); });
+
+function pdfs(inp) {
+  const fs = [...inp.files]; if (!fs.length) return;
+  run("Evaluating Portfolio PDFs...", async () => {
+    const F = []; for (const f of fs) F.push(await b64(f));
+    const t = await llm("Assess the attached portfolio PDF(s) as an Art Director. Provide level (junior/mid/senior), skill breakdown (1-5), strengths, weaknesses. End with two lines: LEVEL: <junior|mid|senior> and KEYWORDS: <15 comma-separated keywords>.", F);
+    S.prof = t;
+    const m = t.match(/KEYWORDS:\s*(.+)/i); if (m) S.kw = m[1].trim();
+  });
+}
+
+async function handleCritiqueImages(inp) {
+  const fs = [...inp.files]; if (!fs.length) return;
+  for (const f of fs) { critImages.push(await b64(f)); }
+  draw();
+}
+
+function removeCritImage(i) {
+  critImages.splice(i, 1);
+  draw();
+}
+
+async function submitCritique() {
+  const note = $("critNote").value;
+  if (!critImages.length && !note) return toast("Please upload an image or provide notes.");
+  run("Analyzing progress images...", async () => {
+    const prompt = "Provide a strict, professional art director critique on this 3D WIP submission.\n\nCANDIDATE PROFILE:\n" + ctx() + "\n\nARTIST NOTES:\n" + note + "\n\nProvide Feedback on:\n1. Silhouette & Proportions\n2. Topology, UVs, or Shading\n3. Practical steps to improve\n4. How this reflects on their current skill level.";
+    const response = await llm(prompt, critImages);
+    S.critiques.unshift({ dt: new Date().toISOString().slice(0, 10), note, critique: response });
+    critImages = [];
+  });
+}
+
+async function newPj() {
+  if (!S.prof) throw new Error("Assess your portfolio in Profile tab first.");
+  const SUBJ = ["hard-surface prop", "vehicle", "weapon or gear", "sci-fi environment piece", "cloth or garment", "procedural Houdini setup", "stylized game-ready asset", "realistic everyday object", "mechanical device"];
+  const sj = SUBJ[Math.floor(Math.random() * SUBJ.length)];
+  const prompt = 'Design ONE tailored practice project for this 3D artist to level up.\n\nCANDIDATE:\n' + ctx() + '\nSuggested topic: ' + sj + '\n\nReply ONLY with JSON: {"title":"","skill":"","why":"","brief":"","steps":["5-7 steps"],"deliverable":"","hours":0,"stretch":""}';
+  const t = await llm(prompt);
+  const start = t.indexOf("{");
+  const end = t.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error("AI did not return a valid JSON object.");
+  const p = JSON.parse(t.slice(start, end + 1));
+  p.dt = new Date().toISOString().slice(0, 10);
+  p.done = 0;
+  S.pj.unshift(p);
+}
+
+async function run(m, f) { busy = m; draw(); try { await f(); } catch (e) { toast(e.message || "Action failed."); } busy = ""; save(); draw(); }
+
+function apply(i) {
+  const j = S.jobs[i];
+  if (!/^https?:\/\//.test(j.u)) return toast("Invalid application URL.");
+  if (S.cl[j.u]) {
+    try { navigator.clipboard.writeText(S.cl[j.u]); toast("Cover letter copied to clipboard."); } catch (e) { }
+  }
+  if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+    window.Capacitor.Plugins.Browser.open({ url: j.u });
+  } else {
+    window.open(j.u, "_system") || window.open(j.u, "_blank");
+  }
+}
+
+function setSt(i, v) { S.st[S.jobs[i].u] = v; save(); }
+function cp() { try { navigator.clipboard.writeText(out); toast("Copied to clipboard."); } catch (e) { $("o").select(); } }
+
+function writeLetter(i) {
+  run("Writing Letter...", function() { return letter(i); });
+}
+
+function togglePj(i) {
+  if (S.pj[i]) { S.pj[i].done = S.pj[i].done ? 0 : 1; save(); draw(); }
+}
+
+function deletePj(i) {
+  if (S.pj[i]) { S.pj.splice(i, 1); save(); draw(); }
+}
+
+function jobsV() {
+  var lt = S.loc.split(",").map(function(x) { return x.trim().toLowerCase(); }).filter(Boolean);
+  var L = S.jobs.map(function(j, i) { return [j, i]; }).filter(function(pair) {
+    var j = pair[0];
+    var status = S.st[j.u] || "New";
+    var matchStatus = (flt === "All" || status === flt);
+    var matchLoc = (!lt.length || !j.l || lt.some(function(t) { return (j.l + " " + j.t).toLowerCase().includes(t); }));
+    return matchStatus && matchLoc;
+  });
+
+  var statusOptions = ["All"].concat(ST).map(function(x) {
+    return '<option ' + (x === flt ? 'selected' : '') + '>Status: ' + esc(x) + '</option>';
+  }).join("");
+
+  var topCard = '<div class="c">' +
+    '<h2>Search & Filter Jobs</h2>' +
+    '<div class="r">' +
+      '<input placeholder="Job keyword (e.g. 3d artist)" value="' + esc(S.q) + '" oninput="S.q=this.value;save()">' +
+      '<input placeholder="Locations (e.g. remote, egypt)" value="' + esc(S.loc) + '" oninput="S.loc=this.value;save()" onchange="draw()">' +
+    '</div>' +
+    '<button class="b" onclick="run(\'Searching sources...\', find)">Find 3D Jobs</button>' +
+    '<div class="r">' +
+      '<button class="b g" onclick="run(\'AI Search...\', ai)">AI Web Search</button>' +
+      '<button class="b g" onclick="run(\'Ranking Jobs...\', rank)">Rank via AI</button>' +
+    '</div>' +
+    '<button class="b g" onclick="run(\'Analyzing Skill Gaps...\', gaps)">Analyze Skill Gaps</button>' +
+    '<div class="r" style="margin-top:12px;">' +
+      '<select onchange="flt=this.value;draw()">' + statusOptions + '</select>' +
+      '<select onchange="S.sort=this.value;save();draw()"><option value="fit"' + (S.sort === "fit" ? ' selected' : '') + '>Best fit first</option></select>' +
+    '</div>' +
+    '<div class="mu" style="margin-top:4px;">Showing ' + L.length + ' available opportunities</div>' +
+  '</div>';
+
+  var jobCards = L.map(function(pair) {
+    var j = pair[0];
+    var i = pair[1];
+    var status = S.st[j.u] || "New";
+    var statusSelect = ST.map(function(x) {
+      return '<option ' + (x === status ? 'selected' : '') + '>' + x + '</option>';
+    }).join("");
+
+    var fitReason = j.w ? ' &mdash; ' + esc(j.w) : '';
+    var letterBtnText = S.cl[j.u] ? 'View Cover Letter' : 'Cover Letter';
+
+    return '<div class="c">' +
+      '<span class="badge">' + esc(status) + '</span>' +
+      '<h2>' + esc(j.t) + '</h2>' +
+      '<div class="mu">' + esc(j.c) + ' &middot; ' + esc(j.l || "Remote") + ' &middot; ' + esc(j.s) + '</div>' +
+      '<div class="ok" style="margin:6px 0;">Fit Score: ' + j.sc + '/100' + fitReason + '</div>' +
+      '<select onchange="setSt(' + i + ', this.value)" style="margin-bottom:8px;">' + statusSelect + '</select>' +
+      '<div class="r">' +
+        '<button class="b g" onclick="writeLetter(' + i + ')">' + letterBtnText + '</button>' +
+        '<button class="b" onclick="apply(' + i + ')">Apply Now</button>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+
+  return topCard + jobCards;
+}
+
+function critV() {
+  var imgsHtml = critImages.map(function(img, idx) {
+    return '<div class="img-thumb-container">' +
+      '<img src="data:' + img.t + ';base64,' + img.d + '">' +
+      '<button class="img-remove" onclick="removeCritImage(' + idx + ')">&#10005;</button>' +
+      '</div>';
+  }).join("");
+
+  var critiquesHtml = (S.critiques || []).map(function(c) {
+    var noteHtml = c.note ? '<p style="margin:4px 0 10px;"><b>Note:</b> ' + esc(c.note) + '</p>' : '';
+    return '<div class="c">' +
+      '<div class="badge">' + esc(c.dt) + '</div>' +
+      noteHtml +
+      '<div style="white-space:pre-wrap; font-size:0.9rem;" class="mu">' + esc(c.critique) + '</div>' +
+      '</div>';
+  }).join("");
+
+  return '<div class="c">' +
+    '<h2>Request AI Progress Critique</h2>' +
+    '<div class="mu">Upload screenshots of models, wireframes, or UV renders for an Art Director critique.</div>' +
+    '<input type="file" accept="image/*,.jpg,.png,.jpeg,.webp" multiple onchange="handleCritiqueImages(this)">' +
+    '<div class="img-preview">' + imgsHtml + '</div>' +
+    '<textarea id="critNote" placeholder="Describe the asset, target polycount, software used, or specific areas you want feedback on..."></textarea>' +
+    '<button class="b" onclick="submitCritique()">Submit for Critique</button>' +
+    '</div>' + critiquesHtml;
+}
+
+function profV() {
+  var providers = [["gemini", "Google Gemini"], ["claude", "Anthropic Claude"], ["openai", "OpenAI GPT"]];
+  var providerOptions = providers.map(function(x) {
+    return '<option value="' + x[0] + '"' + (x[0] === S.pv ? ' selected' : '') + '>' + x[1] + '</option>';
+  }).join("");
+
+  return '<div class="c">' +
+    '<h2>AI Configuration</h2>' +
+    '<select onchange="S.pv=this.value;save();draw()">' + providerOptions + '</select>' +
+    '<input type="password" placeholder="API Key" value="' + esc(S.keys[S.pv] || "") + '" oninput="S.keys[S.pv]=this.value;save()">' +
+    '<input placeholder="Model override (default: ' + DM[S.pv] + ')" value="' + esc(S.md[S.pv] || "") + '" oninput="S.md[S.pv]=this.value;save()">' +
+  '</div>' +
+  '<div class="c">' +
+    '<h2>Portfolio Assessment</h2>' +
+    '<div class="mu">Upload your portfolio PDF (under 20MB) to automatically determine your level and focus skills.</div>' +
+    '<input type="file" accept=".pdf,application/pdf" multiple onchange="pdfs(this)">' +
+    '<textarea style="height:180px" oninput="S.prof=this.value;save()" placeholder="Your level and portfolio review will appear here...">' + esc(S.prof) + '</textarea>' +
+  '</div>' +
+  '<div class="c">' +
+    '<h2>Artist Profile</h2>' +
+    '<textarea oninput="S.about=this.value;save()">' + esc(S.about) + '</textarea>' +
+    '<h3>Target Keywords</h3>' +
+    '<input value="' + esc(S.kw) + '" oninput="S.kw=this.value;save()">' +
+  '</div>' +
+  '<div class="c">' +
+    '<h2>Tracked Studio Job Boards</h2>' +
+    '<textarea oninput="S.studios=this.value;save()">' + esc(S.studios) + '</textarea>' +
+  '</div>';
+}
+
+function pracV() {
+  var listHtml = S.pj.map(function(p, i) {
+    var stepsHtml = (p.steps || []).map(function(x) { return '<li>' + esc(x) + '</li>'; }).join("");
+    var doneBtnText = p.done ? 'Completed &#10003;' : 'Mark Complete';
+    var doneBtnClass = p.done ? 'b' : 'b g';
+
+    return '<div class="c">' +
+      '<span class="badge">' + esc(p.skill) + '</span>' +
+      '<h2>' + esc(p.title) + '</h2>' +
+      '<div class="mu">Estimated time: ~' + esc(p.hours) + ' hours</div>' +
+      '<p style="font-size:0.9rem; margin:8px 0;">' + esc(p.why) + '</p>' +
+      '<p style="font-size:0.9rem;"><b>Brief:</b> ' + esc(p.brief) + '</p>' +
+      '<ol style="font-size:0.88rem; padding-left:20px;" class="mu">' + stepsHtml + '</ol>' +
+      '<div class="r">' +
+        '<button class="' + doneBtnClass + '" onclick="togglePj(' + i + ')">' + doneBtnText + '</button>' +
+        '<button class="b danger" onclick="deletePj(' + i + ')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+
+  return '<div class="c">' +
+    '<h2>Generate Practice Project</h2>' +
+    '<div class="mu">Get customized project prompts designed to level up your portfolio based on your current skill gaps.</div>' +
+    '<button class="b" onclick="run(\'Generating Project Prompt...\', newPj)">Generate Project Brief</button>' +
+    '</div>' + listHtml;
+}
+
+function draw() {
+  var container = $("app");
+  if (!container) throw new Error("Root element #app is missing from DOM.");
+
+  var navBtns = ["Jobs", "Critique", "Practice", "Profile"].map(function(n) {
+    return '<button class="' + (n === tab ? "on" : "") + '" onclick="tab=\'' + n + '\';draw()">' + n + '</button>';
+  }).join("");
+
+  var busyHtml = busy ? '<div class="c" style="text-align:center;"><span class="spinner"></span> <span style="margin-left:8px;">' + esc(busy) + '</span></div>' : '';
+  var outHtml = out ? '<div class="c"><textarea id="o" readonly>' + esc(out) + '</textarea><div class="r"><button class="b" onclick="cp()">Copy Text</button><button class="b g" onclick="out=\'\';draw()">Close</button></div></div>' : '';
+
+  var bodyContent = (tab === "Jobs" ? jobsV() : tab === "Critique" ? critV() : tab === "Practice" ? pracV() : profV());
+
+  container.innerHTML = '<nav>' + navBtns + '</nav>' + busyHtml + outHtml + bodyContent;
+}
+
+// Initial application render
+draw();
+</script>
+</body>
+</html>
