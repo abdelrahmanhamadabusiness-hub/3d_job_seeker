@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>3D Pipeline & Portfolio Accelerator</title>
+<title>3D Studio Pipeline & Career Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --bg: #0b0f19;
-  --card: #151c2c;
-  --border: #28354d;
+  --bg: #0a0e17;
+  --card: #141b2d;
+  --card-sub: #1b2438;
+  --border: #26334d;
   --text-main: #f1f5f9;
   --text-muted: #94a3b8;
   --accent: #6366f1;
@@ -20,13 +21,13 @@
   --danger: #ef4444;
   --warning: #f59e0b;
   --radius: 12px;
-  --shadow: 0 4px 16px -2px rgba(0,0,0,0.4);
+  --shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0 auto;
-  max-width: 680px;
+  max-width: 700px;
   padding: 12px 14px calc(80px + env(safe-area-inset-bottom, 0px));
   background: var(--bg);
   color: var(--text-main);
@@ -35,8 +36,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h2 { font-size: 1.1rem; font-weight: 700; margin: 0 0 8px; color: var(--text-main); }
-h3 { font-size: 0.92rem; font-weight: 600; margin: 10px 0 4px; color: var(--accent); }
+h2 { font-size: 1.15rem; font-weight: 700; margin: 0 0 8px; color: var(--text-main); }
+h3 { font-size: 0.95rem; font-weight: 600; margin: 12px 0 6px; color: var(--accent); }
 
 nav {
   display: flex;
@@ -57,7 +58,7 @@ nav button {
   background: transparent;
   color: var(--text-muted);
   border-radius: 8px;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -107,7 +108,7 @@ textarea {
   color: var(--text-main);
   width: 100%;
   margin: 6px 0 10px;
-  height: 100px;
+  height: 90px;
   resize: vertical;
 }
 
@@ -140,7 +141,7 @@ textarea {
   margin: 10px 0;
 }
 .param-card {
-  background: var(--bg);
+  background: var(--card-sub);
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -148,6 +149,16 @@ textarea {
 }
 .param-card strong { display: block; color: var(--text-muted); font-size: 0.7rem; }
 .param-card span { font-size: 0.92rem; font-weight: 700; color: var(--accent); }
+
+.detail-box {
+  background: var(--card-sub);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 0.85rem;
+}
+.detail-box h4 { margin: 0 0 6px; font-size: 0.88rem; color: #fff; }
 
 .tab-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; }
 .chip {
@@ -195,12 +206,12 @@ let S = {
     },
     strengths: [], weaknesses: [],
     niches: ["Hard-Surface & Props", "Houdini & Procedural", "Environment & Unreal", "VFX & Assets"],
-    summary: "3D Asset Artist | Maya, Houdini, ZBrush, Substance, Unreal Engine.",
+    summary: "Abdelrahman Hamada | 3D Asset & Environment Artist. Maya, Houdini, ZBrush, Substance, Unreal Engine.",
     reviewHistory: []
   },
   projects: [],
   portfolio: {
-    activePieces: ["Legacy Portfolio Base"],
+    activePieces: ["Base Legacy Portfolio"],
     archivedPieces: []
   },
   jobs: []
@@ -209,12 +220,12 @@ let S = {
 let tab = "Profile", activeCategory = "All";
 
 try {
-  const item = localStorage.getItem("jh_v3");
+  const item = localStorage.getItem("jh_v4");
   if (item) Object.assign(S, JSON.parse(item));
 } catch(e) {}
 
 const save = () => {
-  try { localStorage.setItem("jh_v3", JSON.stringify(S)); } catch(e) {}
+  try { localStorage.setItem("jh_v4", JSON.stringify(S)); } catch(e) {}
 };
 
 function toast(m) {
@@ -238,137 +249,171 @@ function copyAndLaunch(targetApp, promptText) {
     toast("Copy failed. Please copy manually.");
   });
 }
-</script>
-<script>
+
 // --- PROMPT GENERATORS ---
 
 function getHarshReviewPrompt() {
-  return `ACT AS: AAA Studio Lead Art Director (ILM, Epic Games).
-TASK: Perform a brutally honest 12-parameter evaluation of my attached 3D Portfolio / PDF.
+  return `ACT AS: AAA Studio Lead Art Director (ILM, Epic Games, Weta Digital).
+TASK: Perform a brutally honest 12-parameter evaluation of my attached 3D Portfolio / PDF against real studio production benchmarks.
 
-CURRENT PROFILE:
+CURRENT PROFILE SUMMARY:
 ${S.profile.summary}
 
-ACTIVE PORTFOLIO PIECES:
+ACTIVE SHOWCASE PIECES:
 ${S.portfolio.activePieces.join("\n")}
 
-Return ONLY valid JSON matching this exact structure:
+CRITICAL INSTRUCTION: Return ONLY valid JSON matching this exact structure:
 {
   "type": "review",
   "level": "Junior | Mid-Level | Senior",
   "readinessScore": 65,
-  "harshVerdict": "Brutal 1-sentence assessment of studio readiness.",
+  "harshVerdict": "Brutally honest 1-sentence assessment of production readiness.",
   "parameters": {
     "topologyEdgeFlow": 70, "uvTexelDensity": 60, "pbrShadingCalibration": 75,
     "hardSurfacePrecision": 80, "proceduralHoudini": 50, "unrealEngineOptimization": 40,
     "assetModularization": 55, "bakeQualityHighToLow": 70, "presentationStudioLighting": 65,
     "pipelineNamingStandards": 60, "realismScaleAccuracy": 75, "portfolioCompleteness": 50
   },
-  "strengths": ["Strong PBR metalness calibration"],
-  "weaknesses": ["Inconsistent texel density", "Unoptimized UV packing"],
+  "strengths": ["Clear edge loop flow on hard-surface props", "PBR roughness maps calibrated"],
+  "weaknesses": ["Inconsistent texel density across modular kits", "Lack of vertex-painted shader wear"],
   "niches": ["Hard-Surface & Props", "Houdini & Procedural", "Environment & Unreal", "VFX & Assets"],
-  "summary": "Updated candidate summary."
+  "summary": "Updated candidate profile summary incorporating these new findings."
 }`;
 }
 
 function getStudioProjectPrompt() {
-  return `ACT AS: Lead Technical Art Director.
-TASK: Create a strict AAA Studio Project Brief targeted specifically at my profile weaknesses.
+  return `ACT AS: Senior Art Director at a AAA Game & VFX Studio.
+TASK: Generate an ULTRA-DETAILED, FULLY-SPECIFIED AAA Studio Production Assignment to bridge my current profile weaknesses.
 
-CURRENT WEAKNESSES:
-${S.profile.weaknesses.join("; ") || "Inconsistent texel density, unoptimized UV packing"}
+CURRENT WEAKNESSES TO BRIDGE:
+${S.profile.weaknesses.join("\n") || "Inconsistent texel density, unoptimized UV packing, lack of modular grid snapping"}
 
-Return ONLY valid JSON matching this exact structure:
+DO NOT GENERATE VAGUE OR GENERIC TITLES. Be extremely specific about environment themes, narrative lore, visual art pillars, kit piece lists, and exact engine budgets.
+
+CRITICAL INSTRUCTION: Return ONLY valid JSON matching this exact structure:
 {
   "type": "project",
   "id": "proj_${Date.now()}",
-  "title": "AAA Cyberpunk Weapon Asset",
-  "category": "Hard-Surface & Props",
-  "studioContext": "AAA FPS Title Asset",
-  "targetWeaknessBridged": "Texel Density & UDIM Packing",
+  "title": "Subterranean Soviet Bio-Lab Containment Module",
+  "category": "Environment & Unreal",
+  "environmentType": "Abandoned 1980s Cold War Underground Chemical Facility",
+  "narrativeLore": "Deep underground biological research facility abandoned after an industrial chemical breach. Cold, damp, heavy industrial machinery, rusted steel beams, shattered blast glass, and emergency fluorescent lighting.",
+  "artDirectionPillars": {
+    "style": "Industrial Utilitarian Realism with heavy environmental decay",
+    "visualReferences": "Alien Isolation architecture + Control facility layout + Chernobyl interiors",
+    "colorPalette": "Corroded dark olive metals, rusted iron, sickly fluorescent cyan, flashing emergency amber"
+  },
+  "targetWeaknessBridged": "Modular Grid Snapping, 10.24 px/cm Texel Density & Trim Sheet Optimization",
+  "modularKitBreakdown": {
+    "trimSheets": [
+      "1x 4K Primary Trim Sheet (Heavy bevels, steel floor grates, wall trim, conduit pipes)",
+      "1x 4K Concrete Tileable Map (Dirty concrete floor & ceiling slabs with vertex painted moisture)"
+    ],
+    "wallAndFloorKit": [
+      "4m x 4m Reinforced Industrial Steel Wall Panel (3 variations)",
+      "4m x 4m Door Frame Module with Pneumatic Blast Door",
+      "2m x 2m Modular Floor Slab with Removable Steel Grating",
+      "4m Structural Steel I-Beam Support Column with Mounting Brackets"
+    ],
+    "heroAsset": "Subterranean Cryo-Containment Pod with internal fluid shader, glowing status dials, and tangled pneumatic hose bundles",
+    "dressingProps": ["Wall-mounted pressure gauges", "High-voltage conduit pipe runs", "Discarded hazard canisters", "Emergency alarm box"]
+  },
   "techSpecs": {
-    "polycountBudget": "40,000 Tris max",
-    "textureResolution": "2x 4K PBR UDIM sets",
-    "texelDensityTarget": "10.24 px/cm at 1m",
-    "engineTarget": "Unreal Engine 5.4"
+    "gridSnapUnit": "Strict 1.0m and 0.5m Unreal Engine Grid Snapping",
+    "polycountBudget": "Modular Walls <3,500 Tris; Hero Cryo Pod <45,000 Tris; Total Room Module <150,000 Tris",
+    "texelDensityTarget": "Strict 10.24 px/cm at 1m scale (Calibrated across all UV sets)",
+    "shaderRequirements": "UE5 Master Shader supporting 2-layer Vertex Color painting (Dirt & Corrosion blend) + PBR Glass shader",
+    "engineTarget": "Unreal Engine 5.4 Nanite mesh workflow with Lumen GI & Volumetric Fog"
   },
   "phases": [
-    "Phase 1: Blockout & Grid Snapping",
-    "Phase 2: High Poly Beveling & ZBrush Detail",
-    "Phase 3: Low Poly & Texel Density UV Calibration",
-    "Phase 4: Substance PBR Texturing",
-    "Phase 5: UE5 Lookdev & Lighting Render"
+    "Phase 1 (Pre-Vis & Grid Calibration): Set up Maya/Houdini project with 1m grid snap. Model rough graybox layout. Calibrate 10.24 px/cm checkerboard material.",
+    "Phase 2 (Trim Sheet & Master Materials): Model high-poly trim sheet details (flanges, bevels, grates). Bake 4K normal/ambient occlusion/curvature maps. Build UE5 Master Shader with vertex painting.",
+    "Phase 3 (Modular Asset & Hero Sculpting): Model modular wall and floor kits matching exact 4m/2m snap pivots. High-poly ZBrush mechanical sculpt of Cryo-Pod hero asset.",
+    "Phase 4 (Low Poly, UVs & PBR Texturing): UV unwrapping with 80%+ packing density. Texture Cryo-Pod and props in Substance Painter using calibrated PBR metal/roughness values.",
+    "Phase 5 (UE5 Assembly, Lighting & Polish): Assemble room module in UE5. Setup cold fluorescent lighting, volumetric steam fog, custom collision, and render high-res portfolio shots in Marmoset / UE5 Movie Render Queue."
   ],
-  "commonPitfallsToAvoid": ["Overlapping UVs on visible faces", "Stretched normal maps"],
-  "signoffCriteria": "Mesh must pass zero-error PBR bake and 10.24 px/cm density check."
+  "commonPitfallsToAvoid": [
+    "Non-matching texel density between modular wall tiles and hero props",
+    "Off-grid pivot points causing light leaks along modular snap seams in UE5",
+    "Over-saturated roughness maps making surfaces look like wet plastic"
+  ],
+  "signoffCriteria": "Zero light leaks on snap seams, 10.24 px/cm density verified, PBR roughness calibrated, passes automated mesh check."
 }`;
 }
 
 function getWIPReviewPrompt(pId) {
   const p = S.projects.find(x => x.id === pId);
   if (!p) return "";
-  return `ACT AS: Lead Art Director.
+  return `ACT AS: AAA Studio Lead Art Director.
 TASK: Review attached WIP screenshots for project: "${p.title}".
 
-PROJECT SPECS:
-- Poly Budget: ${p.techSpecs?.polycountBudget}
-- Texel Density: ${p.techSpecs?.texelDensityTarget}
+PROJECT TECHNICAL SPECS:
+- Environment Theme: ${p.environmentType || p.category}
+- Target Texel Density: ${p.techSpecs?.texelDensityTarget}
+- Grid Unit: ${p.techSpecs?.gridSnapUnit}
 - Sign-Off Criteria: ${p.signoffCriteria}
 
 INSTRUCTIONS:
-Inspect attached WIP images against the specs. If it meets AAA studio standards, set "status" to "completed". Otherwise set "status" to "in_progress".
+Inspect the attached WIP screenshots against these technical specs. If the asset/environment meets production AAA standards, set "status" to "completed". Otherwise set "status" to "in_progress" and provide specific art director fixes.
 
-Return ONLY valid JSON:
+Return ONLY valid JSON matching this exact structure:
 {
   "type": "wip_review",
   "projectId": "${p.id}",
-  "status": "completed",
-  "artDirectorFeedback": "Topology edge flow and texel density pass studio bar. Approved for portfolio.",
-  "requiredFixes": []
+  "status": "completed | in_progress",
+  "artDirectorFeedback": "Topology edge flow, bevel width, and texel density pass studio bar. Approved for portfolio.",
+  "requiredFixes": ["Add chamfer bevel to sharp door frame edge", "Increase roughness variation on floor metal"]
 }`;
 }
 
 function getCuratePortfolioPrompt() {
   const completed = S.projects.filter(p => p.status === "completed");
-  return `ACT AS: Portfolio Strategist & Art Director.
-TASK: Curate my portfolio PDF structure by incorporating newly COMPLETED AAA studio projects and pruning weak/outdated pieces.
+  return `ACT AS: Portfolio Strategist & AAA Art Director.
+TASK: Curate my portfolio structure by incorporating newly COMPLETED AAA projects and pruning outdated/weak legacy pieces.
 
-COMPLETED PROJECTS READY FOR PORTFOLIO:
-${completed.map(c => `- ${c.title} (${c.category}): Bridges${c.targetWeaknessBridged}`).join("\n") || "None completed yet"}
+COMPLETED PROJECTS READY FOR SHOWCASE:
+${completed.map(c => `- ${c.title} (${c.category}): Solves${c.targetWeaknessBridged}`).join("\n") || "None completed yet"}
 
-CURRENT PORTFOLIO PIECES:
+CURRENT SHOWCASE PIECES:
 ${S.portfolio.activePieces.join("\n")}
 
 Return ONLY valid JSON matching this exact structure:
 {
   "type": "curation",
-  "activePieces": ["New AAA Cyberpunk Weapon Asset", "Updated Environment Modular Kit"],
+  "activePieces": ["New AAA Subterranean Soviet Bio-Lab Module", "Updated Procedural Houdini Asset Kit"],
   "archivedPieces": ["Old 2023 Low-Poly Prop"],
-  "pdfLayoutRecommendation": "Lead with new Cyberpunk Weapon showcasing UDIM density breakdowns, followed by Modular Environment Kit.",
-  "updatedSummary": "Updated portfolio profile summary."
+  "pdfLayoutRecommendation": "Lead with new Subterranean Bio-Lab showcasing UDIM texel density breakdowns and UE5 lighting passes.",
+  "updatedSummary": "Updated candidate summary reflecting newly added studio-grade assets."
 }`;
 }
 
 function getCategorizedJobsPrompt() {
-  return `ACT AS: 3D Talent Scout.
-TASK: Use WEB SEARCH to find CURRENT 3D job openings matching my profile.
+  return `ACT AS: 3D Industry Talent Scout & Headhunter.
+TASK: Use WEB SEARCH to find CURRENT, REAL 3D job openings matching my portfolio level and niches.
 
-CANDIDATE PROFILE:
+CANDIDATE LIVING PROFILE:
 - Level: ${S.profile.level} (Readiness: ${S.profile.readinessScore}/100)
-- Active Portfolio Assets: ${S.portfolio.activePieces.join(", ")}
+- Active Portfolio Showcase: ${S.portfolio.activePieces.join(", ")}
 - Niches: ${S.profile.niches.join(", ")}
+- Verified Strengths: ${S.profile.strengths.join("; ")}
 
-Return ONLY a valid JSON array of jobs:
+CATEGORIES REQUIRED:
+1. "Hard-Surface & Props"
+2. "Houdini & Procedural"
+3. "Environment & Unreal"
+4. "VFX & Assets"
+
+Return ONLY a valid JSON array of job postings matching this structure:
 [
   {
-    "title": "3D Hard Surface Asset Artist",
+    "title": "3D Environment & Asset Artist",
     "company": "Studio Name",
     "location": "Remote / Location",
     "url": "https://direct-job-link.com",
-    "category": "Hard-Surface & Props",
-    "fitScore": 90,
-    "fitReason": "Matches Maya, ZBrush, and Substance Painter stack.",
-    "summary": "2-sentence role overview."
+    "category": "Environment & Unreal",
+    "fitScore": 92,
+    "fitReason": "Matches Maya, Substance Painter, and Unreal Engine 5 stack.",
+    "summary": "2-sentence overview of primary responsibilities."
   }
 ]`;
 }
@@ -382,7 +427,7 @@ function parseAndImportJSON() {
     const clean = raw.replace(/```json|```/g, "").trim();
     const data = JSON.parse(clean);
 
-    if (data.type === "review" || data.parameters) {
+    if (data.type === "review" || (data.parameters && !data.techSpecs)) {
       const p = S.profile;
       p.level = data.level || p.level;
       p.readinessScore = data.readinessScore || p.readinessScore;
@@ -394,13 +439,13 @@ function parseAndImportJSON() {
       save(); draw();
       toast("Incremental Profile updated!");
     } 
-    else if (data.type === "project" || data.studioContext) {
+    else if (data.type === "project" || data.modularKitBreakdown || data.narrativeLore) {
       data.id = data.id || ("proj_" + Date.now());
       data.status = "in_progress";
       data.wipFeedback = [];
       S.projects.unshift(data);
       save(); draw();
-      toast("Studio Project Brief added!");
+      toast("Detailed Studio Project Brief added!");
     } 
     else if (data.type === "wip_review" || data.projectId) {
       const proj = S.projects.find(x => x.id === data.projectId);
@@ -458,12 +503,12 @@ function profileV() {
       <div class="param-grid">${paramCards}</div>
       
       <h3>Weaknesses to Bridge</h3>
-      <div>${p.weaknesses.map(w => `<span class="badge warn">⚠ ${esc(w)}</span>`).join("") || '<span class="mu">None logged.</span>'}</div>
+      <div>${p.weaknesses.map(w => `<span class="badge warn">⚠ ${esc(w)}</span>`).join("") || '<span class="mu">None logged yet.</span>'}</div>
     </div>
 
     <div class="c">
       <h2>Run 12-Parameter Harsh Review</h2>
-      <div class="mu">Copies prompt & launches LLM. Attach portfolio PDF to receive structured evaluation.</div>
+      <div class="mu">Copies evaluation prompt & launches LLM. Attach portfolio PDF to update candidate parameters.</div>
       <div class="r">
         <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getHarshReviewPrompt())">ChatGPT</button>
         <button class="b claude" onclick="copyAndLaunch('Claude', getHarshReviewPrompt())">Claude</button>
@@ -486,10 +531,14 @@ function projectsV() {
       ? `<span class="badge succ">✓ COMPLETED (Passed Art Director Review)</span>`
       : `<span class="badge warn">⏳ IN PROGRESS (Awaiting WIP Approval)</span>`;
 
+    const kit = p.modularKitBreakdown || {};
+    const art = p.artDirectionPillars || {};
+
     const feedbackHtml = (p.wipFeedback || []).map(f => `
       <div class="param-card" style="margin-top:6px;">
-        <strong>${f.date} Feedback:</strong>
-        <div style="font-size:0.8rem; color:var(--text-main);">${esc(f.feedback)}</div>
+        <strong>${f.date} Art Director Feedback:</strong>
+        <div style="font-size:0.82rem; color:var(--text-main); margin-top:2px;">${esc(f.feedback)}</div>
+        ${(f.fixes && f.fixes.length) ? `<div style="font-size:0.78rem; color:var(--danger); margin-top:4px;"><b>Fixes:</b> ${f.fixes.map(esc).join(", ")}</div>` : ''}
       </div>
     `).join("");
 
@@ -497,20 +546,54 @@ function projectsV() {
       <div class="c">
         ${statusBadge}
         <h2>${esc(p.title)}</h2>
-        <div class="mu"><b>Context:</b> ${esc(p.studioContext)}</div>
+        <div class="mu"><b>Environment Theme:</b> ${esc(p.environmentType || p.category)}</div>
         <div class="ok" style="margin:4px 0;">Targeting Weakness: ${esc(p.targetWeaknessBridged)}</div>
 
-        <h3>Technical Specs</h3>
+        ${p.narrativeLore ? `
+          <div class="detail-box">
+            <h4>Narrative Lore & Backstory</h4>
+            <div class="mu">${esc(p.narrativeLore)}</div>
+          </div>
+        ` : ''}
+
+        ${art.style ? `
+          <div class="detail-box">
+            <h4>Art Direction Pillars</h4>
+            <div style="font-size:0.8rem;"><b>Style:</b> ${esc(art.style)}</div>
+            <div style="font-size:0.8rem;"><b>Visual References:</b> ${esc(art.visualReferences)}</div>
+            <div style="font-size:0.8rem;"><b>Color Palette:</b> ${esc(art.colorPalette)}</div>
+          </div>
+        ` : ''}
+
+        <h3>Modular Kit & Asset Breakdown</h3>
+        <div class="detail-box">
+          ${kit.trimSheets ? `<div><b>Trim Sheets:</b> <ul style="margin:2px 0 6px; padding-left:18px;">${kit.trimSheets.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ''}
+          ${kit.wallAndFloorKit ? `<div><b>Modular Walls & Floors:</b> <ul style="margin:2px 0 6px; padding-left:18px;">${kit.wallAndFloorKit.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ''}
+          ${kit.heroAsset ? `<div><b>Hero Asset:</b> ${esc(kit.heroAsset)}</div>` : ''}
+          ${kit.dressingProps ? `<div style="margin-top:4px;"><b>Dressing Props:</b> ${esc(kit.dressingProps.join(", "))}</div>` : ''}
+        </div>
+
+        <h3>Technical Specifications</h3>
         <div class="param-grid">
-          <div class="param-card"><strong>Budget</strong>${esc(p.techSpecs?.polycountBudget)}</div>
-          <div class="param-card"><strong>Textures</strong>${esc(p.techSpecs?.textureResolution)}</div>
-          <div class="param-card"><strong>Texel Density</strong>${esc(p.techSpecs?.texelDensityTarget)}</div>
-          <div class="param-card"><strong>Engine</strong>${esc(p.techSpecs?.engineTarget)}</div>
+          <div class="param-card"><strong>Grid Unit</strong>${esc(p.techSpecs?.gridSnapUnit || 'N/A')}</div>
+          <div class="param-card"><strong>Texel Density</strong>${esc(p.techSpecs?.texelDensityTarget || 'N/A')}</div>
+          <div class="param-card"><strong>Poly Budgets</strong>${esc(p.techSpecs?.polycountBudget || 'N/A')}</div>
+          <div class="param-card"><strong>Target Engine</strong>${esc(p.techSpecs?.engineTarget || 'N/A')}</div>
+        </div>
+        ${p.techSpecs?.shaderRequirements ? `<div class="mu" style="margin-bottom:8px;"><b>Shader Setup:</b> ${esc(p.techSpecs.shaderRequirements)}</div>` : ''}
+
+        <h3>Production Milestone Phases</h3>
+        <ol style="font-size:0.82rem; padding-left:18px;" class="mu">
+          ${(p.phases || []).map(ph => `<li style="margin-bottom:4px;">${esc(ph)}</li>`).join("")}
+        </ol>
+
+        <div class="mu" style="color:var(--danger); margin-top:8px;">
+          <b>Sign-Off Criteria:</b> ${esc(p.signoffCriteria)}
         </div>
 
         ${!isDone ? `
-          <h3>Submit WIP Pictures for Review</h3>
-          <div class="mu">Copy prompt, open LLM, and attach WIP screenshots. Import JSON feedback to complete this project.</div>
+          <h3 style="margin-top:14px;">Submit WIP Pictures for Approval</h3>
+          <div class="mu">Copy WIP review prompt, launch LLM, attach progress screenshots. Import JSON response to complete project.</div>
           <div class="r">
             <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getWIPReviewPrompt('${p.id}'))">WIP ➔ ChatGPT</button>
             <button class="b claude" onclick="copyAndLaunch('Claude', getWIPReviewPrompt('${p.id}'))">WIP ➔ Claude</button>
@@ -525,15 +608,15 @@ function projectsV() {
 
   return `
     <div class="c">
-      <h2>Generate Target Studio Project</h2>
-      <div class="mu">Generates an ultra-detailed brief targeting your specific profile weaknesses.</div>
+      <h2>Generate AAA Studio Brief</h2>
+      <div class="mu">Generates an ultra-detailed studio assignment complete with narrative lore, trim sheets, modular kit lists, and tech budgets.</div>
       <div class="r">
         <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getStudioProjectPrompt())">ChatGPT</button>
         <button class="b claude" onclick="copyAndLaunch('Claude', getStudioProjectPrompt())">Claude</button>
         <button class="b gemini" onclick="copyAndLaunch('Gemini', getStudioProjectPrompt())">Gemini</button>
       </div>
     </div>
-    ${cards || '<div class="c mu" style="text-align:center;">No projects created yet.</div>'}
+    ${cards || '<div class="c mu" style="text-align:center;">No project briefs generated yet.</div>'}
   `;
 }
 
@@ -543,8 +626,8 @@ function portfolioV() {
 
   return `
     <div class="c">
-      <h2>Portfolio Curation & PDF Generator</h2>
-      <div class="mu">Once projects are marked <b>COMPLETED</b>, run this prompt to let the LLM prune old/weak assets and structure your new showcase PDF.</div>
+      <h2>Portfolio Curation</h2>
+      <div class="mu">Once projects are marked <b>COMPLETED</b>, run this prompt to let the LLM prune outdated legacy assets and restructure your showcase PDF layout.</div>
       <div class="r">
         <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getCuratePortfolioPrompt())">ChatGPT</button>
         <button class="b claude" onclick="copyAndLaunch('Claude', getCuratePortfolioPrompt())">Claude</button>
@@ -553,16 +636,16 @@ function portfolioV() {
     </div>
 
     <div class="c">
-      <h2>Current Active Showcase</h2>
+      <h2>Active Showcase Assets</h2>
       <ul style="font-size:0.88rem; padding-left:18px;">${activeList || '<li>No active pieces.</li>'}</ul>
 
-      <h3>Archived / Removed Legacy Projects</h3>
+      <h3>Archived / Removed Assets</h3>
       <ul style="font-size:0.85rem; padding-left:18px;">${archivedList || '<li class="mu">None archived yet.</li>'}</ul>
     </div>
 
     <div class="c">
-      <h2>Next Step: Trigger Re-Evaluation</h2>
-      <div class="mu">After updating your portfolio PDF with new completed assets, return to the <b>Profile</b> tab and run a new <b>12-Parameter Harsh Review</b> to elevate your readiness score.</div>
+      <h2>Trigger Re-Evaluation</h2>
+      <div class="mu">After assembling your updated PDF with new completed assets, return to the <b>Profile</b> tab and run a new <b>12-Parameter Harsh Review</b> to elevate your readiness score.</div>
       <button class="b" onclick="tab='Profile';draw()">Go to Profile & Re-Evaluate</button>
     </div>
   `;
@@ -589,7 +672,7 @@ function jobsV() {
   return `
     <div class="c">
       <h2>Find Categorized Jobs</h2>
-      <div class="mu">Uses your active portfolio & living profile to search current job openings.</div>
+      <div class="mu">Uses your active portfolio & living profile parameters to search real open positions.</div>
       <div class="r">
         <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getCategorizedJobsPrompt())">ChatGPT</button>
         <button class="b claude" onclick="copyAndLaunch('Claude', getCategorizedJobsPrompt())">Claude</button>
