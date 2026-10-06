@@ -3,87 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>3D Job Hunter & Art Critique</title>
+<title>3D Pipeline & Portfolio Accelerator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- PWA STANDALONE META TAGS -->
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f172a">
-<link rel="manifest" href='data:application/manifest+json,{"name":"3D Job Hunter","short_name":"JobHunter","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#0f172a"}'>
-
-<!-- EARLY GLOBAL ERROR CATCHER -->
-<script>
-(function() {
-  function showError(title, msg, stack) {
-    var errBox = document.getElementById('app-error-screen');
-    if (!errBox) {
-      errBox = document.createElement('div');
-      errBox.id = 'app-error-screen';
-      errBox.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#1e1010;color:#f87171;padding:20px;z-index:999999;font-family:monospace;overflow:auto;box-sizing:border-box;';
-      document.body ? document.body.appendChild(errBox) : document.documentElement.appendChild(errBox);
-    }
-    errBox.innerHTML = '<h2 style="color:#ef4444;margin-top:0;">&#9888; App Execution Error</h2>' +
-      '<strong>Type:</strong> ' + (title || 'Error') + '<br>' +
-      '<strong>Message:</strong> ' + (msg || 'Unknown Error') + '<br><br>' +
-      '<strong>Stack Trace:</strong><pre style="background:#0f0505;padding:10px;border-radius:6px;white-space:pre-wrap;color:#fca5a5;">' + (stack || 'N/A') + '</pre>' +
-      '<button onclick="location.reload()" style="padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">Reload App</button>';
-  }
-
-  window.onerror = function(msg, url, line, col, error) {
-    var stack = error && error.stack ? error.stack : ('Line ' + line + ', Col ' + col + ' in ' + (url || 'script'));
-    showError(msg, 'Uncaught Exception', stack);
-    return false;
-  };
-
-  window.addEventListener('unhandledrejection', function(e) {
-    var reason = e.reason;
-    var msg = reason ? (reason.message || reason) : 'Unhandled Promise Rejection';
-    var stack = reason && reason.stack ? reason.stack : 'No stack available';
-    showError('Unhandled Promise Rejection', msg, stack);
-  });
-})();
-</script>
-
 <style>
 :root {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --card-hover: #334155;
-  --border: #334155;
-  --text-main: #f8fafc;
+  --bg: #0b0f19;
+  --card: #151c2c;
+  --border: #28354d;
+  --text-main: #f1f5f9;
   --text-muted: #94a3b8;
   --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-light: rgba(99, 102, 241, 0.15);
   --success: #22c55e;
   --danger: #ef4444;
+  --warning: #f59e0b;
   --radius: 12px;
-  --shadow: 0 4px 12px -2px rgba(0,0,0,0.3);
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #f8fafc;
-    --card: #ffffff;
-    --card-hover: #f1f5f9;
-    --border: #e2e8f0;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --accent: #4f46e5;
-    --accent-hover: #4338ca;
-    --accent-light: rgba(79, 70, 229, 0.1);
-    --shadow: 0 4px 12px -2px rgba(0,0,0,0.05);
-  }
+  --shadow: 0 4px 16px -2px rgba(0,0,0,0.4);
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0 auto;
-  max-width: 600px;
+  max-width: 680px;
   padding: 12px 14px calc(80px + env(safe-area-inset-bottom, 0px));
   background: var(--bg);
   color: var(--text-main);
@@ -92,33 +35,32 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h2 { font-size: 1.05rem; font-weight: 700; margin: 0 0 6px; color: var(--text-main); }
-h3 { font-size: 0.95rem; font-weight: 600; margin: 0 0 4px; }
+h2 { font-size: 1.1rem; font-weight: 700; margin: 0 0 8px; color: var(--text-main); }
+h3 { font-size: 0.92rem; font-weight: 600; margin: 10px 0 4px; color: var(--accent); }
 
 nav {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 4px;
+  margin-bottom: 14px;
   background: var(--card);
   padding: 6px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+  overflow-x: auto;
 }
 nav button {
   flex: 1;
-  padding: 10px 6px;
+  min-width: 75px;
+  padding: 10px 4px;
   border: none;
   background: transparent;
   color: var(--text-muted);
   border-radius: 8px;
-  font-size: 0.88rem;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  white-space: nowrap;
 }
 nav button.on {
   background: var(--accent);
@@ -139,21 +81,25 @@ nav button.on {
 .ok { color: var(--success); font-weight: 600; font-size: 0.85rem; }
 .badge {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 3px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
-  background: var(--accent-light);
+  background: rgba(99, 102, 241, 0.15);
   color: var(--accent);
   margin-bottom: 6px;
+  margin-right: 4px;
 }
+.badge.warn { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+.badge.succ { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+.badge.danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
 
 .r { display: flex; gap: 8px; margin: 8px 0; }
 .r > * { flex: 1; }
 
-input, select, textarea {
+textarea {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -161,21 +107,18 @@ input, select, textarea {
   color: var(--text-main);
   width: 100%;
   margin: 6px 0 10px;
-  outline: none;
+  height: 100px;
+  resize: vertical;
 }
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent);
-}
-textarea { height: 130px; resize: vertical; }
 
 .b {
-  padding: 10px 16px;
+  padding: 10px 14px;
   border: 0;
   border-radius: 8px;
   background: var(--accent);
   color: #fff;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   width: 100%;
   margin-top: 6px;
@@ -183,20 +126,40 @@ textarea { height: 130px; resize: vertical; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  text-decoration: none;
 }
-.b.g { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-.b.danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+.b.gpt { background: #10a37f; }
+.b.claude { background: #d97706; }
+.b.gemini { background: #2563eb; }
 
-.img-preview { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
-.img-thumb-container { position: relative; width: 84px; height: 84px; }
-.img-thumb-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
-.img-remove {
-  position: absolute; top: -6px; right: -6px;
-  background: var(--danger); color: white; border: none;
-  border-radius: 50%; width: 20px; height: 20px; font-size: 11px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
+.param-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
 }
+.param-card {
+  background: var(--bg);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+.param-card strong { display: block; color: var(--text-muted); font-size: 0.7rem; }
+.param-card span { font-size: 0.92rem; font-weight: 700; color: var(--accent); }
+
+.tab-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; }
+.chip {
+  padding: 6px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.chip.active { background: var(--accent); border-color: var(--accent); color: white; }
 
 #toast {
   position: fixed; left: 16px; right: 16px;
@@ -206,104 +169,52 @@ textarea { height: 130px; resize: vertical; }
   transition: opacity 0.25s ease, transform 0.25s ease;
   transform: translateY(10px); pointer-events: none;
   text-align: center; font-weight: 600; font-size: 0.88rem;
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); z-index: 1000;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); z-index: 1000;
 }
 #toast.show { opacity: 1; transform: translateY(0); }
-
-.spinner {
-  width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff; border-radius: 50%;
-  animation: spin 0.8s linear infinite; display: inline-block;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<div id="app">
-  <div style="padding:24px; text-align:center; color:#94a3b8; font-family:sans-serif;">
-    Initialising 3D Job Hunter...
-  </div>
-</div>
+<div id="app"></div>
 <div id="toast"></div>
 
-<script charset="utf-8">
-// --- DIAGNOSTIC ENVIRONMENT SUITE ---
-(function runDiagnostics() {
-  var errs = [];
-  if (!window.fetch) errs.push('Fetch API is missing');
-  if (!window.Promise) errs.push('Promises are unsupported');
-  if (!window.DOMParser) errs.push('DOMParser is missing');
-  
-  try {
-    localStorage.setItem('__test__', '1');
-    localStorage.removeItem('__test__');
-  } catch(e) {
-    errs.push('LocalStorage is restricted or disabled: ' + e.message);
-  }
-
-  if (errs.length > 0) {
-    throw new Error('Environment Diagnostic Check Failed:\n- ' + errs.join('\n- '));
-  }
-})();
-
-// --- MAIN APPLICATION SCRIPT ---
+<script>
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-const DM = { openai: "gpt-4o-mini", claude: "claude-haiku-4-5-20251001", gemini: "gemini-3.8-flash" };
-const ST = ["New", "Saved", "Applied", "Interview", "Rejected"];
-
-const DEFAULT_GEMINI_KEY = "AQ.Ab8RN6IA1Iif984B6xeZhodlIzPTef5FM-6roi5DiQBH9LDOWQ";
-
 let S = {
-  pv: "gemini",
-  keys: { gemini: DEFAULT_GEMINI_KEY },
-  md: {},
-  q: "3d",
-  kw: "houdini, hard-surface, hard surface, cloth, maya, zbrush, substance, unreal, props, assets, uv",
-  about: "Abdelrahman Hamada, 3D Asset Artist (film/VFX assets). Hard-surface modeling, procedural modeling in Houdini, cloth creation and simulation, UVs. Tools: Maya, Houdini, ZBrush, Substance Painter, Unreal Engine, NukeX. Freelance: CG commercial, stylized game-ready assets, vegetation assets.",
-  pj: [],
-  pf: "Auto",
-  prof: "",
-  loc: "remote, worldwide, anywhere, egypt, europe, emea",
-  sort: "fit",
-  studios: "gh:epicgames\ngh:riotgames\ngh:roblox\ngh:unity3d\ngh:bungie\ngh:nianticlabs\ngh:scopely",
-  jobs: [],
-  st: {},
-  cl: {},
-  critiques: []
+  profile: {
+    level: "Unassessed",
+    readinessScore: 0,
+    parameters: {
+      topologyEdgeFlow: 0, uvTexelDensity: 0, pbrShadingCalibration: 0,
+      hardSurfacePrecision: 0, proceduralHoudini: 0, unrealEngineOptimization: 0,
+      assetModularization: 0, bakeQualityHighToLow: 0, presentationStudioLighting: 0,
+      pipelineNamingStandards: 0, realismScaleAccuracy: 0, portfolioCompleteness: 0
+    },
+    strengths: [], weaknesses: [],
+    niches: ["Hard-Surface & Props", "Houdini & Procedural", "Environment & Unreal", "VFX & Assets"],
+    summary: "3D Asset Artist | Maya, Houdini, ZBrush, Substance, Unreal Engine.",
+    reviewHistory: []
+  },
+  projects: [],
+  portfolio: {
+    activePieces: ["Legacy Portfolio Base"],
+    archivedPieces: []
+  },
+  jobs: []
 };
 
-let tab = "Jobs", out = "", busy = "", flt = "All", critImages = [];
+let tab = "Profile", activeCategory = "All";
 
-// Safe LocalStorage loading
 try {
-  const item = localStorage.getItem("jh");
-  if (item) {
-    const parsed = JSON.parse(item);
-    Object.assign(S, parsed);
-  }
-} catch (e) {
-  console.warn("Storage read failed:", e);
-}
-
-// Ensure default Gemini API key is active and model override is updated
-if (!S.keys) S.keys = {};
-if (!S.keys.gemini) {
-  S.keys.gemini = DEFAULT_GEMINI_KEY;
-}
-if (!S.md) S.md = {};
-if (S.md.gemini === "gemini-2.5-flash") {
-  S.md.gemini = "gemini-3.8-flash";
-}
+  const item = localStorage.getItem("jh_v3");
+  if (item) Object.assign(S, JSON.parse(item));
+} catch(e) {}
 
 const save = () => {
-  try {
-    localStorage.setItem("jh", JSON.stringify(S));
-  } catch (e) {
-    console.warn("Storage save failed:", e);
-  }
+  try { localStorage.setItem("jh_v3", JSON.stringify(S)); } catch(e) {}
 };
 
 function toast(m) {
@@ -315,401 +226,392 @@ function toast(m) {
   window.tt = setTimeout(() => t.classList.remove("show"), 3200);
 }
 
-const ctx = () => S.about + (S.prof ? "\n\nPORTFOLIO & LEVEL ASSESSMENT:\n" + S.prof : "");
+function copyAndLaunch(targetApp, promptText) {
+  navigator.clipboard.writeText(promptText).then(() => {
+    toast("Prompt copied! Opening " + targetApp + "...");
+    setTimeout(() => {
+      if (targetApp === "ChatGPT") window.open("https://chatgpt.com", "_blank");
+      if (targetApp === "Claude") window.open("https://claude.ai", "_blank");
+      if (targetApp === "Gemini") window.open("https://gemini.google.com/app", "_blank");
+    }, 600);
+  }).catch(() => {
+    toast("Copy failed. Please copy manually.");
+  });
+}
+</script>
+<script>
+// --- PROMPT GENERATORS ---
 
-async function llm(p, files, web) {
-  const v = S.pv;
-  const k = S.keys[v] || (v === "gemini" ? DEFAULT_GEMINI_KEY : "");
-  const m = S.md[v] || DM[v];
-  files = files || [];
-  if (!k) throw new Error("Add your API key in Profile settings.");
+function getHarshReviewPrompt() {
+  return `ACT AS: AAA Studio Lead Art Director (ILM, Epic Games).
+TASK: Perform a brutally honest 12-parameter evaluation of my attached 3D Portfolio / PDF.
 
-  let r, j;
-  const ck = (n) => {
-    if (!r.ok) throw new Error((j && j.error && (j.error.message || j.error)) || (n + " error " + r.status));
-  };
-  const post = (u, h, b) => fetch(u, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, h), body: JSON.stringify(b) });
+CURRENT PROFILE:
+${S.profile.summary}
 
-  if (v === "openai") {
-    const h = { Authorization: "Bearer " + k };
-    if (web) {
-      r = await post("https://api.openai.com/v1/responses", h, { model: m, tools: [{ type: "web_search" }], input: p });
-      j = await r.json(); ck("OpenAI");
-      return j.output_text || (j.output || []).flatMap(o => o.content || []).map(c => c.text || "").join("");
+ACTIVE PORTFOLIO PIECES:
+${S.portfolio.activePieces.join("\n")}
+
+Return ONLY valid JSON matching this exact structure:
+{
+  "type": "review",
+  "level": "Junior | Mid-Level | Senior",
+  "readinessScore": 65,
+  "harshVerdict": "Brutal 1-sentence assessment of studio readiness.",
+  "parameters": {
+    "topologyEdgeFlow": 70, "uvTexelDensity": 60, "pbrShadingCalibration": 75,
+    "hardSurfacePrecision": 80, "proceduralHoudini": 50, "unrealEngineOptimization": 40,
+    "assetModularization": 55, "bakeQualityHighToLow": 70, "presentationStudioLighting": 65,
+    "pipelineNamingStandards": 60, "realismScaleAccuracy": 75, "portfolioCompleteness": 50
+  },
+  "strengths": ["Strong PBR metalness calibration"],
+  "weaknesses": ["Inconsistent texel density", "Unoptimized UV packing"],
+  "niches": ["Hard-Surface & Props", "Houdini & Procedural", "Environment & Unreal", "VFX & Assets"],
+  "summary": "Updated candidate summary."
+}`;
+}
+
+function getStudioProjectPrompt() {
+  return `ACT AS: Lead Technical Art Director.
+TASK: Create a strict AAA Studio Project Brief targeted specifically at my profile weaknesses.
+
+CURRENT WEAKNESSES:
+${S.profile.weaknesses.join("; ") || "Inconsistent texel density, unoptimized UV packing"}
+
+Return ONLY valid JSON matching this exact structure:
+{
+  "type": "project",
+  "id": "proj_${Date.now()}",
+  "title": "AAA Cyberpunk Weapon Asset",
+  "category": "Hard-Surface & Props",
+  "studioContext": "AAA FPS Title Asset",
+  "targetWeaknessBridged": "Texel Density & UDIM Packing",
+  "techSpecs": {
+    "polycountBudget": "40,000 Tris max",
+    "textureResolution": "2x 4K PBR UDIM sets",
+    "texelDensityTarget": "10.24 px/cm at 1m",
+    "engineTarget": "Unreal Engine 5.4"
+  },
+  "phases": [
+    "Phase 1: Blockout & Grid Snapping",
+    "Phase 2: High Poly Beveling & ZBrush Detail",
+    "Phase 3: Low Poly & Texel Density UV Calibration",
+    "Phase 4: Substance PBR Texturing",
+    "Phase 5: UE5 Lookdev & Lighting Render"
+  ],
+  "commonPitfallsToAvoid": ["Overlapping UVs on visible faces", "Stretched normal maps"],
+  "signoffCriteria": "Mesh must pass zero-error PBR bake and 10.24 px/cm density check."
+}`;
+}
+
+function getWIPReviewPrompt(pId) {
+  const p = S.projects.find(x => x.id === pId);
+  if (!p) return "";
+  return `ACT AS: Lead Art Director.
+TASK: Review attached WIP screenshots for project: "${p.title}".
+
+PROJECT SPECS:
+- Poly Budget: ${p.techSpecs?.polycountBudget}
+- Texel Density: ${p.techSpecs?.texelDensityTarget}
+- Sign-Off Criteria: ${p.signoffCriteria}
+
+INSTRUCTIONS:
+Inspect attached WIP images against the specs. If it meets AAA studio standards, set "status" to "completed". Otherwise set "status" to "in_progress".
+
+Return ONLY valid JSON:
+{
+  "type": "wip_review",
+  "projectId": "${p.id}",
+  "status": "completed",
+  "artDirectorFeedback": "Topology edge flow and texel density pass studio bar. Approved for portfolio.",
+  "requiredFixes": []
+}`;
+}
+
+function getCuratePortfolioPrompt() {
+  const completed = S.projects.filter(p => p.status === "completed");
+  return `ACT AS: Portfolio Strategist & Art Director.
+TASK: Curate my portfolio PDF structure by incorporating newly COMPLETED AAA studio projects and pruning weak/outdated pieces.
+
+COMPLETED PROJECTS READY FOR PORTFOLIO:
+${completed.map(c => `- ${c.title} (${c.category}): Bridges${c.targetWeaknessBridged}`).join("\n") || "None completed yet"}
+
+CURRENT PORTFOLIO PIECES:
+${S.portfolio.activePieces.join("\n")}
+
+Return ONLY valid JSON matching this exact structure:
+{
+  "type": "curation",
+  "activePieces": ["New AAA Cyberpunk Weapon Asset", "Updated Environment Modular Kit"],
+  "archivedPieces": ["Old 2023 Low-Poly Prop"],
+  "pdfLayoutRecommendation": "Lead with new Cyberpunk Weapon showcasing UDIM density breakdowns, followed by Modular Environment Kit.",
+  "updatedSummary": "Updated portfolio profile summary."
+}`;
+}
+
+function getCategorizedJobsPrompt() {
+  return `ACT AS: 3D Talent Scout.
+TASK: Use WEB SEARCH to find CURRENT 3D job openings matching my profile.
+
+CANDIDATE PROFILE:
+- Level: ${S.profile.level} (Readiness: ${S.profile.readinessScore}/100)
+- Active Portfolio Assets: ${S.portfolio.activePieces.join(", ")}
+- Niches: ${S.profile.niches.join(", ")}
+
+Return ONLY a valid JSON array of jobs:
+[
+  {
+    "title": "3D Hard Surface Asset Artist",
+    "company": "Studio Name",
+    "location": "Remote / Location",
+    "url": "https://direct-job-link.com",
+    "category": "Hard-Surface & Props",
+    "fitScore": 90,
+    "fitReason": "Matches Maya, ZBrush, and Substance Painter stack.",
+    "summary": "2-sentence role overview."
+  }
+]`;
+}
+
+// --- DATA IMPORT PARSER ---
+
+function parseAndImportJSON() {
+  const raw = $("importArea").value.trim();
+  if (!raw) return toast("Paste JSON output first.");
+  try {
+    const clean = raw.replace(/```json|```/g, "").trim();
+    const data = JSON.parse(clean);
+
+    if (data.type === "review" || data.parameters) {
+      const p = S.profile;
+      p.level = data.level || p.level;
+      p.readinessScore = data.readinessScore || p.readinessScore;
+      if (data.summary) p.summary = data.summary;
+      if (data.parameters) Object.assign(p.parameters, data.parameters);
+      if (Array.isArray(data.strengths)) p.strengths = [...new Set([...p.strengths, ...data.strengths])];
+      if (Array.isArray(data.weaknesses)) p.weaknesses = [...new Set([...p.weaknesses, ...data.weaknesses])];
+      if (Array.isArray(data.niches)) p.niches = [...new Set([...p.niches, ...data.niches])];
+      save(); draw();
+      toast("Incremental Profile updated!");
+    } 
+    else if (data.type === "project" || data.studioContext) {
+      data.id = data.id || ("proj_" + Date.now());
+      data.status = "in_progress";
+      data.wipFeedback = [];
+      S.projects.unshift(data);
+      save(); draw();
+      toast("Studio Project Brief added!");
+    } 
+    else if (data.type === "wip_review" || data.projectId) {
+      const proj = S.projects.find(x => x.id === data.projectId);
+      if (proj) {
+        proj.status = data.status || proj.status;
+        if (!proj.wipFeedback) proj.wipFeedback = [];
+        proj.wipFeedback.unshift({
+          date: new Date().toISOString().slice(0, 10),
+          feedback: data.artDirectorFeedback,
+          fixes: data.requiredFixes || []
+        });
+        save(); draw();
+        toast(proj.status === "completed" ? "Project APPROVED & Marked Completed!" : "WIP Feedback Logged!");
+      }
+    } 
+    else if (data.type === "curation" || data.activePieces) {
+      if (Array.isArray(data.activePieces)) S.portfolio.activePieces = data.activePieces;
+      if (Array.isArray(data.archivedPieces)) S.portfolio.archivedPieces = data.archivedPieces;
+      if (data.updatedSummary) S.profile.summary = data.updatedSummary;
+      save(); draw();
+      toast("Portfolio Curated & Old Assets Archived!");
+    } 
+    else if (Array.isArray(data)) {
+      S.jobs = data;
+      save(); draw();
+      toast(data.length + " jobs imported!");
     }
-    const content = files.map(f => ({
-      type: f.t.startsWith("image/") ? "image_url" : "file",
-      [f.t.startsWith("image/") ? "image_url" : "file"]: f.t.startsWith("image/") ? { url: "data:" + f.t + ";base64," + f.d } : { filename: f.n, file_data: "data:application/pdf;base64," + f.d }
-    })).concat([{ type: "text", text: p }]);
-    r = await post("https://api.openai.com/v1/chat/completions", h, { model: m, messages: [{ role: "user", content }] });
-    j = await r.json(); ck("OpenAI");
-    return j.choices[0].message.content;
-  }
-
-  if (v === "claude") {
-    const content = files.map(f => ({
-      type: f.t.startsWith("image/") ? "image" : "document",
-      source: { type: "base64", media_type: f.t, data: f.d }
-    })).concat([{ type: "text", text: p }]);
-    const b = { model: m, max_tokens: 4000, messages: [{ role: "user", content }] };
-    if (web) b.tools = [{ type: "web_search_20250305", name: "web_search", max_uses: 8 }];
-    r = await post("https://api.anthropic.com/v1/messages", { "x-api-key": k, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" }, b);
-    j = await r.json(); ck("Claude");
-    return j.content.filter(x => x.type === "text").map(x => x.text).join("");
-  }
-
-  const parts = files.map(f => ({ inline_data: { mime_type: f.t, data: f.d } })).concat([{ text: p }]);
-  const b = { contents: [{ parts }] };
-  if (web) b.tools = [{ google_search: {} }];
-  r = await post("https://generativelanguage.googleapis.com/v1beta/models/" + m + ":generateContent", { "x-goog-api-key": k }, b);
-  j = await r.json(); ck("Gemini");
-  return j.candidates[0].content.parts.map(x => x.text || "").join("");
-}
-
-const J = async u => { const r = await fetch(u); if (!r.ok) throw new Error("Network request failed"); return r.json(); };
-const strip = h => String(h || "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
-const OK = /3d|artist|modell?er|vfx|houdini|asset|prop|environment|texture|lookdev|technical art|animator|rigg|unreal|game art/i;
-
-function score(j) {
-  const x = (j.t + " " + j.d).toLowerCase();
-  const t = j.t.toLowerCase();
-  return Math.min(100, S.kw.split(",").map(k => k.trim().toLowerCase()).filter(Boolean).reduce((a, k) => a + (t.includes(k) ? 25 : x.includes(k) ? 12 : 0), 0));
-}
-
-const STU = {
-  gh: async t => (await J("https://boards-api.greenhouse.io/v1/boards/" + t + "/jobs?content=true")).jobs.map(j => ({ t: j.title, c: t, l: (j.location || {}).name, u: j.absolute_url, d: j.content, dt: j.updated_at, dr: 1, s: "Greenhouse: " + t })),
-  lever: async t => (await J("https://api.lever.co/v0/postings/" + t + "?mode=json")).map(j => ({ t: j.text, c: t, l: (j.categories || {}).location, u: j.hostedUrl, d: j.descriptionPlain, dt: j.createdAt, dr: 1, s: "Lever: " + t })),
-  ashby: async t => (await J("https://api.ashbyhq.com/posting-api/job-board/" + t)).jobs.map(j => ({ t: j.title, c: j.location, u: j.jobUrl, d: j.descriptionPlain, dt: j.publishedAt, dr: 1, s: "Ashby: " + t }))
-};
-  const AGG = [
-  ["Remotive", async () => (await J("https://remotive.com/api/remote-jobs?search=" + encodeURIComponent(S.q || "3d"))).jobs.map(j => ({ t: j.title, c: j.company_name, l: j.candidate_required_location, u: j.url, d: j.description, s: "Remotive", dt: j.publication_date }))],
-  ["RemoteOK", async () => (await J("https://remoteok.com/api")).filter(j => j.position).map(j => ({ t: j.position, c: j.company, l: j.location || "Remote", u: j.url, d: (j.description || "") + " " + (j.tags || []).join(" "), s: "RemoteOK", dt: j.date }))],
-  ["Arbeitnow", async () => (await J("https://www.arbeitnow.com/api/job-board-api")).data.map(j => ({ t: j.title, c: j.company_name, l: j.location, u: j.url, d: (j.description || "") + " " + (j.tags || []).join(" "), s: "Arbeitnow", dt: j.created_at * 1000 }))],
-  ["Jobicy", async () => (await J("https://jobicy.com/api/v2/remote-jobs?count=50&tag=" + encodeURIComponent(S.q || "3d"))).jobs.map(j => ({ t: j.jobTitle, c: j.companyName, l: j.jobGeo || j.jobGeolocation, u: j.url, d: j.jobDescription || j.jobExcerpt, s: "Jobicy", dt: j.pubDate }))],
-  ["WorkingNomads", async () => (await J("https://www.workingnomads.com/api/exposed_jobs/")).map(j => ({ t: j.title, c: j.company_name, l: j.location, u: j.url, d: (j.description || "") + " " + (j.tags || ""), s: "WorkingNomads", dt: j.pub_date }))]
-];
-
-function merge(got, base) {
-  const cnt = {}, seen = {}, nj = [];
-  got.forEach(j => {
-    j.k = ((j.c || "") + j.t).toLowerCase().replace(/\W/g, "");
-    cnt[j.k] = (cnt[j.k] || 0) + 1;
-  });
-  const mk = j => {
-    const raw = String(j.d || "");
-    const m = raw.match(/[\w.+-]+@[\w-]+\.[\w.]+/);
-    const dd = j.dt ? new Date(j.dt) : null;
-    const o = {
-      t: j.t,
-      c: j.c || "",
-      l: j.l || "",
-      u: j.u,
-      s: j.s,
-      dr: j.dr,
-      dt: dd && !isNaN(dd) ? dd.toISOString().slice(0, 10) : "",
-      d: strip(raw).slice(0, 1500),
-      em: m ? m[0] : "",
-      n: cnt[j.k]
-    };
-    o.sc = score(o);
-    return o;
-  };
-  got.filter(j => j.u && j.t && OK.test(j.t)).map(mk).concat(base).forEach(o => {
-    if (seen[o.u]) return;
-    seen[o.u] = 1;
-    nj.push(o);
-  });
-  S.jobs = nj.sort((a, b) => b.sc - a.sc).slice(0, 300);
-}
-
-async function find() {
-  const got = [], bad = [];
-  const tasks = AGG.map(([n, f]) => [n, f]).concat(S.studios.split("\n").map(x => x.trim()).filter(x => /^(gh|lever|ashby):\S+$/.test(x)).map(x => { const [a, t] = x.split(":"); return [x, () => STU[a](t)]; }));
-  await Promise.all(tasks.map(async ([n, f]) => { try { got.push(...await f()); } catch (e) { bad.push(n); } }));
-  merge(got, S.jobs.filter(j => S.st[j.u] && S.st[j.u] !== "New"));
-  save(); toast(S.jobs.length + " jobs loaded.");
-}
-
-async function ai() {
-  const prompt = 'Use web search to find CURRENT open 3D art, VFX or game-art job postings that fit this candidate. Return ONLY a JSON array (max 15) of {"t":title,"c":company,"l":location,"u":direct application URL,"d":summary,"dt":"YYYY-MM-DD or empty"}.';
-  const t = await llm(prompt, null, true);
-  const start = t.indexOf("[");
-  const end = t.lastIndexOf("]");
-  if (start === -1 || end === -1) throw new Error("AI did not return a valid JSON array.");
-  const a = JSON.parse(t.slice(start, end + 1));
-  a.forEach(j => { j.s = "AI Search"; j.dr = 1; });
-  merge(a, S.jobs);
-}
-
-async function rank() {
-  const L = S.jobs.slice(0, 30);
-  if (!L.length) throw new Error("Find jobs first.");
-  const jobList = L.map((j, i) => i + ". " + j.t + " | " + j.c + " | " + j.l + " | " + j.d.slice(0, 300)).join("\n");
-  const prompt = "Candidate:\n" + ctx() + "\n\nScore each job 0-100 for fit. Reply ONLY with a JSON array of {\"i\":number,\"s\":number,\"w\":\"reason max 10 words\"}.\n" + jobList;
-  const t = await llm(prompt);
-  const cleanJson = t.replace(/```json|```/g, "").trim();
-  const results = JSON.parse(cleanJson);
-  results.forEach(r => {
-    const j = L[r.i];
-    if (j) { j.sc = r.s; j.w = r.w; }
-  });
-  S.jobs.sort((a, b) => b.sc - a.sc);
-}
-
-async function letter(i) {
-  const j = S.jobs[i];
-  const prompt = "Write a concise cover letter (<180 words, plain text) for this candidate applying to this role:\n\nCANDIDATE: " + ctx() + "\n\nJOB: " + j.t + " at " + j.c + "\n" + j.d;
-  const t = await llm(prompt);
-  S.cl[j.u] = t;
-  out = t;
-}
-
-async function gaps() {
-  if (!S.jobs.length) throw new Error("Find jobs first.");
-  const prompt = "Candidate: " + ctx() + "\n\nJobs:\n" + S.jobs.slice(0, 25).map(j => j.t + ": " + j.d.slice(0, 250)).join("\n") + "\n\nList the top 6 requested skills the candidate lacks, and 3 project ideas to fix those gaps.";
-  out = await llm(prompt);
-}
-
-const b64 = f => new Promise((y, n) => { const r = new FileReader(); r.onload = () => y({ d: r.result.split(",")[1], t: f.type || "application/pdf", n: f.name }); r.onerror = n; r.readAsDataURL(f); });
-
-function pdfs(inp) {
-  const fs = [...inp.files]; if (!fs.length) return;
-  run("Evaluating Portfolio PDFs...", async () => {
-    const F = []; for (const f of fs) F.push(await b64(f));
-    const t = await llm("Assess the attached portfolio PDF(s) as an Art Director. Provide level (junior/mid/senior), skill breakdown (1-5), strengths, weaknesses. End with two lines: LEVEL: <junior|mid|senior> and KEYWORDS: <15 comma-separated keywords>.", F);
-    S.prof = t;
-    const m = t.match(/KEYWORDS:\s*(.+)/i); if (m) S.kw = m[1].trim();
-  });
-}
-
-async function handleCritiqueImages(inp) {
-  const fs = [...inp.files]; if (!fs.length) return;
-  for (const f of fs) { critImages.push(await b64(f)); }
-  draw();
-}
-
-function removeCritImage(i) {
-  critImages.splice(i, 1);
-  draw();
-}
-
-async function submitCritique() {
-  const note = $("critNote").value;
-  if (!critImages.length && !note) return toast("Please upload an image or provide notes.");
-  run("Analyzing progress images...", async () => {
-    const prompt = "Provide a strict, professional art director critique on this 3D WIP submission.\n\nCANDIDATE PROFILE:\n" + ctx() + "\n\nARTIST NOTES:\n" + note + "\n\nProvide Feedback on:\n1. Silhouette & Proportions\n2. Topology, UVs, or Shading\n3. Practical steps to improve\n4. How this reflects on their current skill level.";
-    const response = await llm(prompt, critImages);
-    S.critiques.unshift({ dt: new Date().toISOString().slice(0, 10), note, critique: response });
-    critImages = [];
-  });
-}
-
-async function newPj() {
-  if (!S.prof) throw new Error("Assess your portfolio in Profile tab first.");
-  const SUBJ = ["hard-surface prop", "vehicle", "weapon or gear", "sci-fi environment piece", "cloth or garment", "procedural Houdini setup", "stylized game-ready asset", "realistic everyday object", "mechanical device"];
-  const sj = SUBJ[Math.floor(Math.random() * SUBJ.length)];
-  const prompt = 'Design ONE tailored practice project for this 3D artist to level up.\n\nCANDIDATE:\n' + ctx() + '\nSuggested topic: ' + sj + '\n\nReply ONLY with JSON: {"title":"","skill":"","why":"","brief":"","steps":["5-7 steps"],"deliverable":"","hours":0,"stretch":""}';
-  const t = await llm(prompt);
-  const start = t.indexOf("{");
-  const end = t.lastIndexOf("}");
-  if (start === -1 || end === -1) throw new Error("AI did not return a valid JSON object.");
-  const p = JSON.parse(t.slice(start, end + 1));
-  p.dt = new Date().toISOString().slice(0, 10);
-  p.done = 0;
-  S.pj.unshift(p);
-}
-
-async function run(m, f) { busy = m; draw(); try { await f(); } catch (e) { toast(e.message || "Action failed."); } busy = ""; save(); draw(); }
-
-function apply(i) {
-  const j = S.jobs[i];
-  if (!/^https?:\/\//.test(j.u)) return toast("Invalid application URL.");
-  if (S.cl[j.u]) {
-    try { navigator.clipboard.writeText(S.cl[j.u]); toast("Cover letter copied to clipboard."); } catch (e) { }
-  }
-  if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
-    window.Capacitor.Plugins.Browser.open({ url: j.u });
-  } else {
-    window.open(j.u, "_system") || window.open(j.u, "_blank");
+    $("importArea").value = "";
+  } catch(e) {
+    toast("JSON Parsing Error: " + e.message);
   }
 }
 
-function setSt(i, v) { S.st[S.jobs[i].u] = v; save(); }
-function cp() { try { navigator.clipboard.writeText(out); toast("Copied to clipboard."); } catch (e) { $("o").select(); } }
+// --- TAB VIEWS ---
 
-function writeLetter(i) {
-  run("Writing Letter...", function() { return letter(i); });
+function profileV() {
+  const p = S.profile;
+  const paramCards = Object.keys(p.parameters).map(k => `
+    <div class="param-card">
+      <strong>${k.replace(/([A-Z])/g, ' $1')}</strong>
+      <span>${p.parameters[k]}/100</span>
+    </div>
+  `).join("");
+
+  return `
+    <div class="c">
+      <h2>Living Profile</h2>
+      <div class="r">
+        <span class="badge succ">Level: ${esc(p.level)}</span>
+        <span class="badge">Readiness: ${p.readinessScore}/100</span>
+      </div>
+      <div class="mu" style="margin-top:4px;">${esc(p.summary)}</div>
+      
+      <h3>12 Scientific Studio Parameters</h3>
+      <div class="param-grid">${paramCards}</div>
+      
+      <h3>Weaknesses to Bridge</h3>
+      <div>${p.weaknesses.map(w => `<span class="badge warn">⚠ ${esc(w)}</span>`).join("") || '<span class="mu">None logged.</span>'}</div>
+    </div>
+
+    <div class="c">
+      <h2>Run 12-Parameter Harsh Review</h2>
+      <div class="mu">Copies prompt & launches LLM. Attach portfolio PDF to receive structured evaluation.</div>
+      <div class="r">
+        <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getHarshReviewPrompt())">ChatGPT</button>
+        <button class="b claude" onclick="copyAndLaunch('Claude', getHarshReviewPrompt())">Claude</button>
+        <button class="b gemini" onclick="copyAndLaunch('Gemini', getHarshReviewPrompt())">Gemini</button>
+      </div>
+    </div>
+
+    <div class="c">
+      <h2>Sync Data / Import JSON</h2>
+      <textarea id="importArea" placeholder="Paste JSON response from LLM here..."></textarea>
+      <button class="b" onclick="parseAndImportJSON()">Import & Sync App</button>
+    </div>
+  `;
 }
 
-function togglePj(i) {
-  if (S.pj[i]) { S.pj[i].done = S.pj[i].done ? 0 : 1; save(); draw(); }
+function projectsV() {
+  const cards = S.projects.map(p => {
+    const isDone = p.status === "completed";
+    const statusBadge = isDone 
+      ? `<span class="badge succ">✓ COMPLETED (Passed Art Director Review)</span>`
+      : `<span class="badge warn">⏳ IN PROGRESS (Awaiting WIP Approval)</span>`;
+
+    const feedbackHtml = (p.wipFeedback || []).map(f => `
+      <div class="param-card" style="margin-top:6px;">
+        <strong>${f.date} Feedback:</strong>
+        <div style="font-size:0.8rem; color:var(--text-main);">${esc(f.feedback)}</div>
+      </div>
+    `).join("");
+
+    return `
+      <div class="c">
+        ${statusBadge}
+        <h2>${esc(p.title)}</h2>
+        <div class="mu"><b>Context:</b> ${esc(p.studioContext)}</div>
+        <div class="ok" style="margin:4px 0;">Targeting Weakness: ${esc(p.targetWeaknessBridged)}</div>
+
+        <h3>Technical Specs</h3>
+        <div class="param-grid">
+          <div class="param-card"><strong>Budget</strong>${esc(p.techSpecs?.polycountBudget)}</div>
+          <div class="param-card"><strong>Textures</strong>${esc(p.techSpecs?.textureResolution)}</div>
+          <div class="param-card"><strong>Texel Density</strong>${esc(p.techSpecs?.texelDensityTarget)}</div>
+          <div class="param-card"><strong>Engine</strong>${esc(p.techSpecs?.engineTarget)}</div>
+        </div>
+
+        ${!isDone ? `
+          <h3>Submit WIP Pictures for Review</h3>
+          <div class="mu">Copy prompt, open LLM, and attach WIP screenshots. Import JSON feedback to complete this project.</div>
+          <div class="r">
+            <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getWIPReviewPrompt('${p.id}'))">WIP ➔ ChatGPT</button>
+            <button class="b claude" onclick="copyAndLaunch('Claude', getWIPReviewPrompt('${p.id}'))">WIP ➔ Claude</button>
+            <button class="b gemini" onclick="copyAndLaunch('Gemini', getWIPReviewPrompt('${p.id}'))">WIP ➔ Gemini</button>
+          </div>
+        ` : ''}
+
+        ${feedbackHtml ? `<h3>Review History</h3>${feedbackHtml}` : ''}
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="c">
+      <h2>Generate Target Studio Project</h2>
+      <div class="mu">Generates an ultra-detailed brief targeting your specific profile weaknesses.</div>
+      <div class="r">
+        <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getStudioProjectPrompt())">ChatGPT</button>
+        <button class="b claude" onclick="copyAndLaunch('Claude', getStudioProjectPrompt())">Claude</button>
+        <button class="b gemini" onclick="copyAndLaunch('Gemini', getStudioProjectPrompt())">Gemini</button>
+      </div>
+    </div>
+    ${cards || '<div class="c mu" style="text-align:center;">No projects created yet.</div>'}
+  `;
 }
 
-function deletePj(i) {
-  if (S.pj[i]) { S.pj.splice(i, 1); save(); draw(); }
+function portfolioV() {
+  const activeList = S.portfolio.activePieces.map(a => `<li><b>${esc(a)}</b></li>`).join("");
+  const archivedList = S.portfolio.archivedPieces.map(a => `<li style="color:var(--danger);">${esc(a)} (Pruned)</li>`).join("");
+
+  return `
+    <div class="c">
+      <h2>Portfolio Curation & PDF Generator</h2>
+      <div class="mu">Once projects are marked <b>COMPLETED</b>, run this prompt to let the LLM prune old/weak assets and structure your new showcase PDF.</div>
+      <div class="r">
+        <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getCuratePortfolioPrompt())">ChatGPT</button>
+        <button class="b claude" onclick="copyAndLaunch('Claude', getCuratePortfolioPrompt())">Claude</button>
+        <button class="b gemini" onclick="copyAndLaunch('Gemini', getCuratePortfolioPrompt())">Gemini</button>
+      </div>
+    </div>
+
+    <div class="c">
+      <h2>Current Active Showcase</h2>
+      <ul style="font-size:0.88rem; padding-left:18px;">${activeList || '<li>No active pieces.</li>'}</ul>
+
+      <h3>Archived / Removed Legacy Projects</h3>
+      <ul style="font-size:0.85rem; padding-left:18px;">${archivedList || '<li class="mu">None archived yet.</li>'}</ul>
+    </div>
+
+    <div class="c">
+      <h2>Next Step: Trigger Re-Evaluation</h2>
+      <div class="mu">After updating your portfolio PDF with new completed assets, return to the <b>Profile</b> tab and run a new <b>12-Parameter Harsh Review</b> to elevate your readiness score.</div>
+      <button class="b" onclick="tab='Profile';draw()">Go to Profile & Re-Evaluate</button>
+    </div>
+  `;
 }
 
 function jobsV() {
-  var lt = S.loc.split(",").map(function(x) { return x.trim().toLowerCase(); }).filter(Boolean);
-  var L = S.jobs.map(function(j, i) { return [j, i]; }).filter(function(pair) {
-    var j = pair[0];
-    var status = S.st[j.u] || "New";
-    var matchStatus = (flt === "All" || status === flt);
-    var matchLoc = (!lt.length || !j.l || lt.some(function(t) { return (j.l + " " + j.t).toLowerCase().includes(t); }));
-    return matchStatus && matchLoc;
-  });
+  const categories = ["All", ...S.profile.niches];
+  const filterChips = categories.map(cat => `
+    <div class="chip ${cat === activeCategory ? 'active' : ''}" onclick="activeCategory='${cat}';draw()">${esc(cat)}</div>
+  `).join("");
 
-  var statusOptions = ["All"].concat(ST).map(function(x) {
-    return '<option ' + (x === flt ? 'selected' : '') + '>Status: ' + esc(x) + '</option>';
-  }).join("");
+  const filteredJobs = activeCategory === "All" ? S.jobs : S.jobs.filter(j => j.category === activeCategory);
+  const jobCards = filteredJobs.map(j => `
+    <div class="c">
+      <span class="badge">${esc(j.category || "3D Asset")}</span>
+      <span class="badge succ">Fit Score: ${j.fitScore}/100</span>
+      <h2>${esc(j.title)}</h2>
+      <div class="mu">${esc(j.company)} &middot; ${esc(j.location)}</div>
+      <p style="font-size:0.88rem; margin:8px 0;">${esc(j.fitReason)}</p>
+      <a href="${esc(j.url)}" target="_blank" class="b">Apply for Job</a>
+    </div>
+  `).join("");
 
-  var topCard = '<div class="c">' +
-    '<h2>Search & Filter Jobs</h2>' +
-    '<div class="r">' +
-      '<input placeholder="Job keyword (e.g. 3d artist)" value="' + esc(S.q) + '" oninput="S.q=this.value;save()">' +
-      '<input placeholder="Locations (e.g. remote, egypt)" value="' + esc(S.loc) + '" oninput="S.loc=this.value;save()" onchange="draw()">' +
-    '</div>' +
-    '<button class="b" onclick="run(\'Searching sources...\', find)">Find 3D Jobs</button>' +
-    '<div class="r">' +
-      '<button class="b g" onclick="run(\'AI Search...\', ai)">AI Web Search</button>' +
-      '<button class="b g" onclick="run(\'Ranking Jobs...\', rank)">Rank via AI</button>' +
-    '</div>' +
-    '<button class="b g" onclick="run(\'Analyzing Skill Gaps...\', gaps)">Analyze Skill Gaps</button>' +
-    '<div class="r" style="margin-top:12px;">' +
-      '<select onchange="flt=this.value;draw()">' + statusOptions + '</select>' +
-      '<select onchange="S.sort=this.value;save();draw()"><option value="fit"' + (S.sort === "fit" ? ' selected' : '') + '>Best fit first</option></select>' +
-    '</div>' +
-    '<div class="mu" style="margin-top:4px;">Showing ' + L.length + ' available opportunities</div>' +
-  '</div>';
+  return `
+    <div class="c">
+      <h2>Find Categorized Jobs</h2>
+      <div class="mu">Uses your active portfolio & living profile to search current job openings.</div>
+      <div class="r">
+        <button class="b gpt" onclick="copyAndLaunch('ChatGPT', getCategorizedJobsPrompt())">ChatGPT</button>
+        <button class="b claude" onclick="copyAndLaunch('Claude', getCategorizedJobsPrompt())">Claude</button>
+        <button class="b gemini" onclick="copyAndLaunch('Gemini', getCategorizedJobsPrompt())">Gemini</button>
+      </div>
+    </div>
 
-  var jobCards = L.map(function(pair) {
-    var j = pair[0];
-    var i = pair[1];
-    var status = S.st[j.u] || "New";
-    var statusSelect = ST.map(function(x) {
-      return '<option ' + (x === status ? 'selected' : '') + '>' + x + '</option>';
-    }).join("");
-
-    var fitReason = j.w ? ' &mdash; ' + esc(j.w) : '';
-    var letterBtnText = S.cl[j.u] ? 'View Cover Letter' : 'Cover Letter';
-
-    return '<div class="c">' +
-      '<span class="badge">' + esc(status) + '</span>' +
-      '<h2>' + esc(j.t) + '</h2>' +
-      '<div class="mu">' + esc(j.c) + ' &middot; ' + esc(j.l || "Remote") + ' &middot; ' + esc(j.s) + '</div>' +
-      '<div class="ok" style="margin:6px 0;">Fit Score: ' + j.sc + '/100' + fitReason + '</div>' +
-      '<select onchange="setSt(' + i + ', this.value)" style="margin-bottom:8px;">' + statusSelect + '</select>' +
-      '<div class="r">' +
-        '<button class="b g" onclick="writeLetter(' + i + ')">' + letterBtnText + '</button>' +
-        '<button class="b" onclick="apply(' + i + ')">Apply Now</button>' +
-      '</div>' +
-    '</div>';
-  }).join("");
-
-  return topCard + jobCards;
-}
-
-function critV() {
-  var imgsHtml = critImages.map(function(img, idx) {
-    return '<div class="img-thumb-container">' +
-      '<img src="data:' + img.t + ';base64,' + img.d + '">' +
-      '<button class="img-remove" onclick="removeCritImage(' + idx + ')">&#10005;</button>' +
-      '</div>';
-  }).join("");
-
-  var critiquesHtml = (S.critiques || []).map(function(c) {
-    var noteHtml = c.note ? '<p style="margin:4px 0 10px;"><b>Note:</b> ' + esc(c.note) + '</p>' : '';
-    return '<div class="c">' +
-      '<div class="badge">' + esc(c.dt) + '</div>' +
-      noteHtml +
-      '<div style="white-space:pre-wrap; font-size:0.9rem;" class="mu">' + esc(c.critique) + '</div>' +
-      '</div>';
-  }).join("");
-
-  return '<div class="c">' +
-    '<h2>Request AI Progress Critique</h2>' +
-    '<div class="mu">Upload screenshots of models, wireframes, or UV renders for an Art Director critique.</div>' +
-    '<input type="file" accept="image/*,.jpg,.png,.jpeg,.webp" multiple onchange="handleCritiqueImages(this)">' +
-    '<div class="img-preview">' + imgsHtml + '</div>' +
-    '<textarea id="critNote" placeholder="Describe the asset, target polycount, software used, or specific areas you want feedback on..."></textarea>' +
-    '<button class="b" onclick="submitCritique()">Submit for Critique</button>' +
-    '</div>' + critiquesHtml;
-}
-
-function profV() {
-  var providers = [["gemini", "Google Gemini"], ["claude", "Anthropic Claude"], ["openai", "OpenAI GPT"]];
-  var providerOptions = providers.map(function(x) {
-    return '<option value="' + x[0] + '"' + (x[0] === S.pv ? ' selected' : '') + '>' + x[1] + '</option>';
-  }).join("");
-
-  return '<div class="c">' +
-    '<h2>AI Configuration</h2>' +
-    '<select onchange="S.pv=this.value;save();draw()">' + providerOptions + '</select>' +
-    '<input type="password" placeholder="API Key" value="' + esc(S.keys[S.pv] || "") + '" oninput="S.keys[S.pv]=this.value;save()">' +
-    '<input placeholder="Model override (default: ' + DM[S.pv] + ')" value="' + esc(S.md[S.pv] || "") + '" oninput="S.md[S.pv]=this.value;save()">' +
-  '</div>' +
-  '<div class="c">' +
-    '<h2>Portfolio Assessment</h2>' +
-    '<div class="mu">Upload your portfolio PDF (under 20MB) to automatically determine your level and focus skills.</div>' +
-    '<input type="file" accept=".pdf,application/pdf" multiple onchange="pdfs(this)">' +
-    '<textarea style="height:180px" oninput="S.prof=this.value;save()" placeholder="Your level and portfolio review will appear here...">' + esc(S.prof) + '</textarea>' +
-  '</div>' +
-  '<div class="c">' +
-    '<h2>Artist Profile</h2>' +
-    '<textarea oninput="S.about=this.value;save()">' + esc(S.about) + '</textarea>' +
-    '<h3>Target Keywords</h3>' +
-    '<input value="' + esc(S.kw) + '" oninput="S.kw=this.value;save()">' +
-  '</div>' +
-  '<div class="c">' +
-    '<h2>Tracked Studio Job Boards</h2>' +
-    '<textarea oninput="S.studios=this.value;save()">' + esc(S.studios) + '</textarea>' +
-  '</div>';
-}
-
-function pracV() {
-  var listHtml = S.pj.map(function(p, i) {
-    var stepsHtml = (p.steps || []).map(function(x) { return '<li>' + esc(x) + '</li>'; }).join("");
-    var doneBtnText = p.done ? 'Completed &#10003;' : 'Mark Complete';
-    var doneBtnClass = p.done ? 'b' : 'b g';
-
-    return '<div class="c">' +
-      '<span class="badge">' + esc(p.skill) + '</span>' +
-      '<h2>' + esc(p.title) + '</h2>' +
-      '<div class="mu">Estimated time: ~' + esc(p.hours) + ' hours</div>' +
-      '<p style="font-size:0.9rem; margin:8px 0;">' + esc(p.why) + '</p>' +
-      '<p style="font-size:0.9rem;"><b>Brief:</b> ' + esc(p.brief) + '</p>' +
-      '<ol style="font-size:0.88rem; padding-left:20px;" class="mu">' + stepsHtml + '</ol>' +
-      '<div class="r">' +
-        '<button class="' + doneBtnClass + '" onclick="togglePj(' + i + ')">' + doneBtnText + '</button>' +
-        '<button class="b danger" onclick="deletePj(' + i + ')">Delete</button>' +
-      '</div>' +
-    '</div>';
-  }).join("");
-
-  return '<div class="c">' +
-    '<h2>Generate Practice Project</h2>' +
-    '<div class="mu">Get customized project prompts designed to level up your portfolio based on your current skill gaps.</div>' +
-    '<button class="b" onclick="run(\'Generating Project Prompt...\', newPj)">Generate Project Brief</button>' +
-    '</div>' + listHtml;
+    <div class="tab-chips">${filterChips}</div>
+    ${jobCards || '<div class="c mu" style="text-align:center;">No jobs imported yet.</div>'}
+  `;
 }
 
 function draw() {
-  var container = $("app");
-  if (!container) throw new Error("Root element #app is missing from DOM.");
+  const app = $("app");
+  const navBtns = ["Profile", "Projects", "Portfolio", "Jobs"].map(n => `
+    <button class="${n === tab ? "on" : ""}" onclick="tab='${n}';draw()">${n}</button>
+  `).join("");
 
-  var navBtns = ["Jobs", "Critique", "Practice", "Profile"].map(function(n) {
-    return '<button class="' + (n === tab ? "on" : "") + '" onclick="tab=\'' + n + '\';draw()">' + n + '</button>';
-  }).join("");
-
-  var busyHtml = busy ? '<div class="c" style="text-align:center;"><span class="spinner"></span> <span style="margin-left:8px;">' + esc(busy) + '</span></div>' : '';
-  var outHtml = out ? '<div class="c"><textarea id="o" readonly>' + esc(out) + '</textarea><div class="r"><button class="b" onclick="cp()">Copy Text</button><button class="b g" onclick="out=\'\';draw()">Close</button></div></div>' : '';
-
-  var bodyContent = (tab === "Jobs" ? jobsV() : tab === "Critique" ? critV() : tab === "Practice" ? pracV() : profV());
-
-  container.innerHTML = '<nav>' + navBtns + '</nav>' + busyHtml + outHtml + bodyContent;
+  const bodyContent = tab === "Profile" ? profileV() : tab === "Projects" ? projectsV() : tab === "Portfolio" ? portfolioV() : jobsV();
+  app.innerHTML = `<nav>${navBtns}</nav>` + bodyContent;
 }
 
-// Initial application render
 draw();
 </script>
 </body>
